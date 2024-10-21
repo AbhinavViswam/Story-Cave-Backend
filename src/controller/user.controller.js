@@ -15,7 +15,6 @@ async function generateAccessTokenAndRefreshToken(userId){
         }
 }
 
-
 const registerUser=async function(req,res){
         try {
                 
@@ -66,7 +65,7 @@ const loginUser=async function(req,res){
          return res.status(200)
          .cookie('accessToken',accessToken,{httpOnly:true})
          .cookie('refreshToken',refreshToken,{ maxAge: 600000,httpOnly:true})
-         .redirect('/users/main')
+         .redirect(user.role==="admin"?'/admin/dashboard':'/users/main')
 }
 
 const forgotPassword=async function(req,res){

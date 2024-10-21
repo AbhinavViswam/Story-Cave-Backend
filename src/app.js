@@ -14,7 +14,9 @@ const userRouter=require('./routes/user.route.js')
 
 app.use('/users',userRouter)
 app.get('/', (req, res) => {
-    res.redirect('/users/login'); // Redirect root to login
+    res.redirect('/users/login'); 
   });
+const adminRouter = require('./routes/admin.route.js');
+app.use('/admin', adminRouter);
 
 module.exports=app

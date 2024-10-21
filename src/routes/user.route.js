@@ -2,6 +2,7 @@ const {registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword}=require('
 const express=require('express')
 const router=express.Router()
 
+
 router.all('/register',(req,res)=>{
     if(req.method=='POST'){
     registerUser(req,res)

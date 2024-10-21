@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #080710;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Form styling */
+        form {
+            max-width: 500px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.13);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+            padding: 50px 35px;
+        }
+
+        form * {
+            font-family: 'Poppins', sans-serif;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+            outline: none;
+            border: none;
+        }
+
+        form h1 {
+            font-size: 2rem;
+            font-weight: 500;
+            line-height: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input, textarea {
+            display: block;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.07);
+            border-radius: 3px;
+            padding: 0 10px;
+            margin-top: 20px;
+            font-size: 1rem;
+            font-weight: 300;
+            transition: background-color 0.3s ease;
+        }
+
+        textarea {
+            height: 100px;
+            resize: none;
+        }
+
+        input:focus, textarea:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Submit Button Styling */
+        input[type="submit"] {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #ff512f, #dd2476);
+            color: #fff;
+            padding: 15px 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(255, 81, 47, 0.3);
+            transition: all 0.4s ease;
+        }
+
+        input[type="submit"]:hover {
+            background: linear-gradient(135deg, #dd2476, #ff512f);
+            box-shadow: 0 10px 15px rgba(255, 81, 47, 0.5);
+            transform: translateY(-5px);
+        }
+
+        /* Error message styling for future usage */
+        .error-message {
+            margin-top: 15px;
+            padding: 10px;
+            color: #ff4f4f;
+            background-color: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff4f4f;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 0.875rem;
+            visibility: hidden;
+            height: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .error-message.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* File input styling */
+        input[type="file"] {
+            color: #ffffff;
+            font-size: 0.9rem;
+            padding: 10px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.07);
+        }
+
+        /* Media Queries for responsiveness */
+        @media (max-width: 1024px) {
+            form {
+                padding: 40px 30px;
+            }
+
+            form h1 {
+                font-size: 1.75rem;
+            }
+
+            input, textarea {
+                font-size: 0.875rem;
+            }
+
+            input[type="submit"] {
+                padding: 12px 0;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            form {
+                padding: 35px 25px;
+            }
+
+            form h1 {
+                font-size: 1.5rem;
+            }
+
+            input, textarea {
+                height: 40px;
+                font-size: 0.875rem;
+            }
+
+            input[type="submit"] {
+                padding: 12px 0;
+                font-size: 0.875rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            form {
+                padding: 30px 20px;
+            }
+
+            form h1 {
+                font-size: 1.25rem;
+            }
+
+            input, textarea {
+                height: 40px;
+                font-size: 0.75rem;
+            }
+
+            input[type="submit"] {
+                padding: 10px 0;
+                font-size: 0.75rem;
+            }
+
+            .error-message {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form action="/admin/add-product" method="post" enctype="multipart/form-data">
+        <h1>Add Product</h1>
+        <input type="text" name="name" placeholder="Name" required>
+        <textarea name="description" placeholder="Description" required></textarea>
+        <input type="text" name="category" placeholder="Category" required>
+        <input type="text" id="price" name="price" required pattern="^\d+(\.\d{1,2})?$" inputmode="decimal" title="Please enter a valid price (e.g. 49.99)" placeholder="Price">
+        <input type="text" id="stock" name="stock" required pattern="^\d+$" inputmode="numeric" title="Please enter a valid stock quantity (only numbers)" placeholder="Stock">
+        <input type="file" name="image" required>
+        <input type="submit" value="Add Product">
+    </form>
+</body>
+</html>

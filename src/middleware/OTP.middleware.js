@@ -16,9 +16,28 @@ async function genOTP(email) {
         const mailOptions = {
             from: process.env.GMAIL_ID,
             to: email,
-            subject: 'Password Reset OTP',
-            text: `Your OTP for password reset is: ${otp}`,
+            subject: `Your OTP:${otp}`,
+            text: `Your OTP for password reset is: ${otp}.
+            This code is valid for the next 10 minutes. Please ensure you 
+            enter it promptly to complete your transaction or login.
+            For your security:
+            - Do not share this OTP with anyone.
+            - Our team will never ask you for this code.
+            If you did not request this OTP or have any concerns, 
+            please contact our support team immediately.`
         };
+
+
+
+
+
+
+
+
+
+
+
+
 
         return transporter.sendMail(mailOptions);
     };
@@ -33,4 +52,4 @@ async function genOTP(email) {
     return OTP[email]
 }
 
-module.exports=genOTP
+module.exports = genOTP
