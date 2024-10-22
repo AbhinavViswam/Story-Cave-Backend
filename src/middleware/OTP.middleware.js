@@ -27,18 +27,6 @@ async function genOTP(email) {
             please contact our support team immediately.`
         };
 
-
-
-
-
-
-
-
-
-
-
-
-
         return transporter.sendMail(mailOptions);
     };
 
