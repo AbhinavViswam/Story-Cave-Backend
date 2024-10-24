@@ -16,23 +16,36 @@
             margin: 0;
             padding: 0;
             color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         h1 {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 10px;
             font-weight: 500;
             color: #ffffff;
         }
         
-        table {
+        .table-container {
             width: 90%;
             margin: 20px auto;
+            max-height: 500px; /* Set a max height for the table container */
+            overflow-y: auto; /* Allow vertical scrolling */
+            overflow-x: auto; /* Allow horizontal scrolling for the container */
+            border-radius: 8px;
+            position: relative; /* Required for sticky positioning */
+        }
+
+        table {
+            width: 100%;
             border-collapse: collapse;
             background-color: rgba(255, 255, 255, 0.1);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             border-radius: 8px;
             overflow: hidden;
+            min-width: 800px;
         }
         
         th, td {
@@ -45,6 +58,9 @@
             color: white;
             text-transform: uppercase;
             font-weight: 700;
+            position: sticky; /* Keep the headers fixed while scrolling */
+            top: 0; /* Sticks to the top */
+            z-index: 2; /* Ensure it is above other content */
         }
         
         td {
@@ -84,9 +100,8 @@
         
         a {
             text-align: center;
-            display: block;
-            margin: 20px auto;
-            width: 200px;
+            display: inline-block;
+            margin: 10px;
             padding: 10px;
             background-color: #ff00005b;
             color: white;
@@ -98,16 +113,73 @@
         a:hover {
             background-color: #ff512f;
         }
-        
-        /* Responsive design for smaller screens */
+
+        /* Scrollbar styling */
+        .table-container::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: #ff512f;
+            border-radius: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #dd2476;
+        }
+
+        /* Align "Add Product" and "Go To Dashboard" buttons */
+        .add-product-container {
+            width: 90%;
+            display: flex;
+            justify-content: space-between; /* Align buttons at opposite sides */
+            margin-bottom: 20px;
+        }
+
         @media (max-width: 768px) {
             table {
-                width: 100%;
-                font-size: 12px;
+                display: block; /* Change to block for responsiveness */
+                overflow-x: auto; /* Allow horizontal scrolling */
+                white-space: nowrap; /* Prevent table cells from breaking */
             }
             
             th, td {
                 padding: 10px;
+                font-size: 12px; /* Adjust font size */
+            }
+
+            /* Stack layout for mobile screens */
+            .product-card {
+                display: flex;
+                flex-direction: column;
+                background-color: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                padding: 10px;
+                margin: 10px 0;
+            }
+
+            .product-card img {
+                width: 80px; /* Adjust image size */
+            }
+
+            .product-card h2 {
+                font-size: 16px; /* Adjust product name font size */
+                margin: 5px 0;
+            }
+
+            .product-card p {
+                font-size: 12px; /* Adjust description font size */
+                margin: 5px 0;
+            }
+
+            .add-product-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            a {
+                width: 80%; /* Adjust button width on small screens */
+                margin: 5px 0;
             }
         }
     </style>
@@ -115,45 +187,50 @@
 <body>
     <h1>All Products</h1>
 
-    <table border="1" cellpadding="10" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Product Name</th>
-                <th>Description</th>
-                <th>Rating</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th>Stock</th>
-                <th>Image</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% products.forEach(product => { %>
+    <div class="table-container">
+        <table border="1" cellpadding="10" cellspacing="0">
+            <thead>
                 <tr>
-                    <td><%= product.name %></td>
-                    <td><%= product.description %></td>
-                    <td><%= product.rating %></td>
-                    <td><%= product.category %></td>
-                    <td>$<%= product.price %></td>
-                    <td><%= product.stock %></td>
-                    <td>
-                        <% if (product.image) { %>
-                            <img src="/<%= product.image %>" alt="Product Image">
-                        <% } else { %>
-                            No Image
-                        <% } %>
-                    </td>
-                    <td class="actions">
-                        <form action="/admin/update-product/<%= product._id %>" method="GET">
-                            <button type="submit">Update</button>
-                        </form>
-                    </td>
+                    <th>Product Name</th>
+                    <th>Description</th>
+                    <th>Rating</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Image</th>
+                    <th>Action</th>
                 </tr>
-            <% }); %>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <% products.forEach(product => { %>
+                    <tr>
+                        <td><%= product.name %></td>
+                        <td><%= product.description %></td>
+                        <td><%= product.rating %></td>
+                        <td><%= product.category %></td>
+                        <td>$<%= product.price %></td>
+                        <td><%= product.stock %></td>
+                        <td>
+                            <% if (product.image) { %>
+                                <img src="/<%= product.image %>" alt="Product Image">
+                            <% } else { %>
+                                No Image
+                            <% } %>
+                        </td>
+                        <td class="actions">
+                            <form action="/admin/update-product/<%= product._id %>" method="GET">
+                                <button type="submit">Update</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
 
-    <a href="/admin/add-product">Add New Product</a>
+    <div class="add-product-container">
+        <a href="/admin/add-product">Add New Product</a>
+        <a href="/admin/dashboard">Go To Dashboard</a>
+    </div>
 </body>
 </html>

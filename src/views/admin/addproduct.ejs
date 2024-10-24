@@ -19,8 +19,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             height: 100vh;
+            flex-direction: column;
         }
 
         /* Form styling */
@@ -92,41 +92,56 @@
             transform: translateY(-5px);
         }
 
-        /* Error message styling for future usage */
-        .error-message {
+        /* Error and Success Message Styling */
+        .error-message, .success-message {
             margin-top: 15px;
-            padding: 10px;
-            color: #ff4f4f;
-            background-color: rgba(255, 0, 0, 0.1);
-            border: 1px solid #ff4f4f;
+            padding: 15px;
             border-radius: 5px;
-            text-align: center;
             font-size: 0.875rem;
-            visibility: hidden;
-            height: auto;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            text-align: center;
+            font-weight: 500;
         }
 
-        .error-message.active {
-            visibility: visible;
-            opacity: 1;
+        .error-message {
+            color: #ff4f4f;
+            background-color: rgba(255, 79, 79, 0.1);
+            border: 1px solid #ff4f4f;
         }
 
-        /* File input styling */
-        input[type="file"] {
-            color: #ffffff;
-            font-size: 0.9rem;
-            padding: 10px;
+        .success-message {
+            color: #4caf50;
+            background-color: rgba(76, 175, 80, 0.1);
+            border: 1px solid #4caf50;
+        }
+
+        /* "Go Back" Link Styling */
+        a {
+            display: block;
             margin-top: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background-color: rgba(255, 255, 255, 0.07);
+            color: #ff512f;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.07);
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: all 0.4s ease;
+            border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Media Queries for responsiveness */
-        @media (max-width: 1024px) {
+        a:hover {
+            background: linear-gradient(135deg, #ff512f, #dd2476);
+            color: #fff;
+            box-shadow: 0 5px 10px rgba(255, 81, 47, 0.5);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Design for landscape and portrait modes */
+        @media (orientation: landscape) {
             form {
-                padding: 40px 30px;
+                padding: 30px 20px;
+                max-width: 80%;
             }
 
             form h1 {
@@ -141,11 +156,17 @@
                 padding: 12px 0;
                 font-size: 1rem;
             }
+
+            a {
+                font-size: 0.875rem;
+                padding: 8px 15px;
+            }
         }
 
-        @media (max-width: 768px) {
+        @media (orientation: portrait) {
             form {
-                padding: 35px 25px;
+                max-width: 90%;
+                padding: 25px 20px;
             }
 
             form h1 {
@@ -153,7 +174,6 @@
             }
 
             input, textarea {
-                height: 40px;
                 font-size: 0.875rem;
             }
 
@@ -161,11 +181,16 @@
                 padding: 12px 0;
                 font-size: 0.875rem;
             }
+
+            a {
+                font-size: 0.875rem;
+            }
         }
 
+        /* Media Query for small screens */
         @media (max-width: 480px) {
             form {
-                padding: 30px 20px;
+                padding: 20px 15px;
             }
 
             form h1 {
@@ -182,8 +207,14 @@
                 font-size: 0.75rem;
             }
 
-            .error-message {
+            a {
                 font-size: 0.75rem;
+                padding: 8px 15px;
+            }
+
+            .error-message, .success-message {
+                font-size: 0.75rem;
+                padding: 8px;
             }
         }
     </style>
@@ -197,7 +228,21 @@
         <input type="text" id="price" name="price" required pattern="^\d+(\.\d{1,2})?$" inputmode="decimal" title="Please enter a valid price (e.g. 49.99)" placeholder="Price">
         <input type="text" id="stock" name="stock" required pattern="^\d+$" inputmode="numeric" title="Please enter a valid stock quantity (only numbers)" placeholder="Stock">
         <input type="file" name="image" required>
+
+        <% if (error) { %>
+            <div class="error-message">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <% if (message) { %>
+            <div class="success-message">
+                <%= message %>
+            </div>
+        <% } %>
+
         <input type="submit" value="Add Product">
+        <a href="/admin/view-product">Go Back</a>
     </form>
 </body>
 </html>

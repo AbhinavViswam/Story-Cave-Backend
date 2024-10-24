@@ -2,12 +2,12 @@ const Product=require("../models/products.models.js")
 
 const addProduct=async (req,res)=>{
     const {name,description,category,price,stock}=req.body
-    console.log(name,description,category,price,stock);
+   
     const image = req.file ? req.file.path.replace('src/public/', '') : "no image";
-    console.log(image);
+   
 
     if(!name || !description || !category || !price || !stock ){
-        return res.json({message:"All fields are required"})
+        res.render("admin/addproduct",{error:"All Fields are required",message:""})
     }
     const add_product=new Product({
         name,
@@ -20,23 +20,34 @@ const addProduct=async (req,res)=>{
     })
     const pdct =await add_product.save();
     if(!pdct){
-        return res.json({message:"error saving to database"})
+        res.render("admin/addproduct",{error:"error saving to database",message:""})
     }
-    res.json({message:"Product added"});
+    res.render("admin/addproduct",{error:"",message:"Product added"});
 }
-
 
 const viewProduct=async(req,res)=>{
     const products=await Product.find()
-    console.log(products);
     res.render('admin/viewproduct',{products});
 }
+
+const getProductDetails = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const product = await Product.findById(id);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.render("admin/updateproduct", { product });
+    } catch (err) {
+        res.status(500).json({ message: "Server error", error: err.message });
+    }
+};
 
 
 const updateProduct=async(req,res)=>{
     const {id}=req.params;
     const{name,description,price,stock,category}=req.body
-    const newImage=req.file?req.files.path:null
+    const newImage=req.file?req.file.path:null
     const product = await Product.findById(id);
     if (!product) {
             return res.status(404).json({ message: "Product not found" });
@@ -59,10 +70,10 @@ const updateProduct=async(req,res)=>{
         {new:true}
     )
     if(!updateData){
-        return res.json({message:"product not found"})
+        res.status(404).redirect('/admin/view-product')
     }
-    res.json({message:"product updated successfully"})
+    res.status(200).redirect("/admin/view-product")
     
 }
 
-module.exports={addProduct,updateProduct,viewProduct}
+module.exports={addProduct,updateProduct,viewProduct,getProductDetails}

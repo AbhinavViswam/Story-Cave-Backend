@@ -3,52 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product</title> 
+    <title>Update Product</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #080710;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        form {
+            max-width: 500px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.13);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+            padding: 50px 35px;
+        }
+
+        form * {
+            font-family: 'Poppins', sans-serif;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+            outline: none;
+            border: none;
+        }
+
+        form h1 {
+            font-size: 2rem;
+            font-weight: 500;
+            line-height: 2.5rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        input, textarea {
+            display: block;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.07);
+            border-radius: 3px;
+            padding: 0 10px;
+            margin-top: 10px;
+            font-size: 1rem;
+            font-weight: 300;
+            transition: background-color 0.3s ease;
+        }
+
+        textarea {
+            height: 100px;
+            resize: none;
+        }
+
+        input:focus, textarea:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        input[type="submit"] {
+            margin-top: 10px;
+            background: linear-gradient(135deg, #ff512f, #dd2476);
+            color: #fff;
+            padding: 15px 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(255, 81, 47, 0.3);
+            transition: all 0.4s ease;
+            flex: 1; /* Allow the button to grow */
+        }
+
+        input[type="submit"]:hover {
+            background: linear-gradient(135deg, #dd2476, #ff512f);
+            box-shadow: 0 10px 15px rgba(255, 81, 47, 0.5);
+            transform: translateY(-5px);
+        }
+
+        .error-message, .success-message {
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 0.875rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .error-message {
+            color: #ff4f4f;
+            background-color: rgba(255, 79, 79, 0.1);
+            border: 1px solid #ff4f4f;
+        }
+
+        .success-message {
+            color: #4caf50;
+            background-color: rgba(76, 175, 80, 0.1);
+            border: 1px solid #4caf50;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            gap: 40px;
+        }
+
+        a {
+            display: flex;
+            color: #ff512f;
+            font-size: 1rem;
+            font-weight: 600;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.07);
+            padding: 2px 2 px;
+            border-radius: 5px;
+            transition: all 0.4s ease;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            flex: 0.5; /* Make the link smaller */
+        }
+
+        a:hover {
+            background: linear-gradient(135deg, #ff512f, #dd2476);
+            color: #fff;
+            box-shadow: 0 5px 10px rgba(255, 81, 47, 0.5);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Design for landscape and portrait modes */
+        @media (orientation: landscape) {
+            form {
+                padding: 30px 20px;
+                max-width: 80%;
+            }
+
+            form h1 {
+                font-size: 1.75rem;
+            }
+
+            input, textarea {
+                font-size: 0.875rem;
+            }
+
+            input[type="submit"] {
+                padding: 12px 0;
+                font-size: 1rem;
+            }
+
+            a {
+                font-size: 0.875rem;
+                padding: 2px 5px;
+            }
+        }
+
+        @media (orientation: portrait) {
+            form {
+                max-width: 90%;
+                padding: 25px 20px;
+            }
+
+            form h1 {
+                font-size: 1.5rem;
+            }
+
+            input, textarea {
+                font-size: 0.875rem;
+            }
+
+            input[type="submit"] {
+                padding: 12px 0;
+                font-size: 0.875rem;
+            }
+
+            a {
+                font-size: 0.875rem;
+            }
+        }
+
+        /* Media Query for small screens */
+        @media (max-width: 480px) {
+            form {
+                padding: 20px 15px;
+            }
+
+            form h1 {
+                font-size: 1.25rem;
+            }
+
+            input, textarea {
+                height: 40px;
+                font-size: 0.75rem;
+            }
+
+            input[type="submit"] {
+                padding: 10px 0;
+                font-size: 0.75rem;
+            }
+
+            a {
+                font-size: 0.75rem;
+                padding: 8px 15px;
+            }
+
+            .error-message, .success-message {
+                font-size: 0.75rem;
+                padding: 8px;
+            }
+        }
+
+        /* Media Query for extra small screens */
+        @media (max-width: 320px) {
+            form {
+                padding: 15px 10px;
+            }
+
+            form h1 {
+                font-size: 1rem;
+            }
+
+            input, textarea {
+                height: 30px;
+                font-size: 0.6rem;
+            }
+
+            input[type="submit"] {
+                padding: 8px 0;
+                font-size: 0.6rem;
+            }
+
+            a {
+                font-size: 0.6rem;
+                padding: 6px 12px;
+            }
+
+            .error-message, .success-message {
+                font-size: 0.6rem;
+                padding: 6px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Add New Product</h1>
-
-    <form action="/admin/add-product" method="POST" enctype="multipart/form-data">
-        <div>
+    <form action="/admin/update-product/<%= product._id %>" method="post" enctype="multipart/form-data">
+        <h1>Update Product</h1>
+        <div class="form-group">
             <label for="name">Product Name:</label>
-            <input type="text" id="name" name="name" placeholder="Enter product name" required>
+            <input type="text" id="name" name="name" value="<%= product.name %>" required>
         </div>
-
-        <div>
+        
+        <div class="form-group">
             <label for="description">Description:</label>
-            <textarea id="description" name="description" placeholder="Enter product description" required></textarea>
+            <textarea id="description" name="description" required><%= product.description %></textarea>
         </div>
 
-        <div>
-            <label for="rating">Rating:</label>
-            <input type="number" id="rating" name="rating" placeholder="Enter rating (0-5)" min="0" max="5" step="0.1" value="0">
-        </div>
-
-        <div>
-            <label for="category">Category:</label>
-            <input type="text" id="category" name="category" placeholder="Enter product category" required>
-        </div>
-
-        <div>
+        <div class="form-group">
             <label for="price">Price:</label>
-            <input type="number" id="price" name="price" placeholder="Enter product price" required>
+            <input type="number" id="price" name="price" value="<%= product.price %>" required>
         </div>
 
-        <div>
+        <div class="form-group">
             <label for="stock">Stock:</label>
-            <input type="number" id="stock" name="stock" placeholder="Enter stock quantity" required>
+            <input type="number" id="stock" name="stock" value="<%= product.stock %>" required>
         </div>
 
-        <div>
-            <label for="image">Product Image:</label>
-            <input type="file" id="image" name="image" required>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <input type="text" id="category" name="category" value="<%= product.category %>" required>
         </div>
-        <% if (error) { %>
-            <div style="color: red;">
-                <p><%= error %></p>
-            </div>
-        <% } %>
-        <button type="submit">Add Product</button>
+
+        <div class="form-group">
+            <label for="image">Product Image:</label>
+            <input type="file" id="image" name="image">
+        </div>
+
+        <div class="button-container">
+            <input type="submit" value="Update Product">
+            <a href="/admin/view-product">Go Back</a>
+        </div>
     </form>
 </body>
 </html>
