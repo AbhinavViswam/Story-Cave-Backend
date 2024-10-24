@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const verifyAdmin = require('../middleware/AdminAuth.middleware.js');
 const upload=require("../middleware/multer.middleware.js")
-const {addProduct,updateProduct,viewProduct,getProductDetails}=require("../controller/product.controller.js")
+const {addProduct,updateProduct,viewProduct,getProductDetails,deleteProduct,deleteProductConfirmation}=require("../controller/product.controller.js")
 
 router.get('/dashboard', verifyAdmin, (req, res) => {
     res.render('admin/dashboard', { user: req.user });
@@ -26,6 +26,20 @@ router.route("/update-product/:id")
 })
 .post(verifyAdmin,upload.single('image'),(req,res)=>{
     updateProduct(req,res);
+})
+
+router.route("/delete-product/:id")
+.post(verifyAdmin,(req,res)=>{
+    deleteProduct(req,res);
+})
+
+
+router.route("/delete-product/:id/confirm")
+.post(verifyAdmin,(req,res)=>{
+    deleteProductConfirmation(req,res);
+})
+.get(verifyAdmin,(req,res)=>{
+    res.render("admin/deleteproduct",{id:""})
 })
 
 module.exports = router;

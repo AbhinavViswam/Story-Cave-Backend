@@ -1,3 +1,4 @@
+
 const Product=require("../models/products.models.js")
 
 const addProduct=async (req,res)=>{
@@ -6,28 +7,36 @@ const addProduct=async (req,res)=>{
     const image = req.file ? req.file.path.replace('src/public/', '') : "no image";
    
 
-    if(!name || !description || !category || !price || !stock ){
-        res.render("admin/addproduct",{error:"All Fields are required",message:""})
+    try {
+        if(!name || !description || !category || !price || !stock ){
+            res.status(400).render("admin/addproduct",{error:"All Fields are required",message:""})
+        }
+        const add_product=new Product({
+            name,
+            description,
+            category,
+            price,
+            rating:0,
+            stock,
+            image
+        })
+        const pdct =await add_product.save();
+        if(!pdct){
+            res.status(500).render("admin/addproduct",{error:"error saving to database",message:""})
+        }
+        res.status(200).render("admin/addproduct",{error:"",message:"Product added"});
+    } catch (error) {
+        res.status(500).render("admin/addproduct",{error:"error saving to database",message:""})
     }
-    const add_product=new Product({
-        name,
-        description,
-        category,
-        price,
-        rating:0,
-        stock,
-        image
-    })
-    const pdct =await add_product.save();
-    if(!pdct){
-        res.render("admin/addproduct",{error:"error saving to database",message:""})
-    }
-    res.render("admin/addproduct",{error:"",message:"Product added"});
 }
 
 const viewProduct=async(req,res)=>{
-    const products=await Product.find()
-    res.render('admin/viewproduct',{products});
+    try {
+        const products=await Product.find()
+        res.status(200).render('admin/viewproduct',{products});
+    } catch (error) {
+        res.status(500).json({error:"Error to fetch data"})
+    }
 }
 
 const getProductDetails = async (req, res) => {
@@ -37,12 +46,11 @@ const getProductDetails = async (req, res) => {
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }
-        res.render("admin/updateproduct", { product });
+        res.status(200).render("admin/updateproduct", { product });
     } catch (err) {
         res.status(500).json({ message: "Server error", error: err.message });
     }
 };
-
 
 const updateProduct=async(req,res)=>{
     const {id}=req.params;
@@ -54,7 +62,7 @@ const updateProduct=async(req,res)=>{
         }
 
     if(!name || !description || !price || !stock || !category){
-        return res.json({message:"all fields are required"})
+        return res.status(400).json({message:"all fields are required"})
     }
 
     const updateData=await Product.findByIdAndUpdate(
@@ -76,4 +84,22 @@ const updateProduct=async(req,res)=>{
     
 }
 
-module.exports={addProduct,updateProduct,viewProduct,getProductDetails}
+const deleteProduct = async (req, res) => {
+    const { id } = req.params;
+        const product = await Product.findById(id);
+        if (!product) {
+            return res.status(404).json({ error: "Product not found" });
+        }
+        res.status(200).render("admin/deleteproduct",{pdct_id:id,product:product})
+};
+
+const deleteProductConfirmation=async(req,res)=>{
+    const { id } = req.params;
+    const product=await Product.findByIdAndDelete(id)
+    if (!product) {
+        return res.status(404).json({ error: "Product not found" });
+    }
+    res.status(200).redirect("/admin/view-product");
+}
+
+module.exports={addProduct,updateProduct,viewProduct,getProductDetails,deleteProduct,deleteProductConfirmation}

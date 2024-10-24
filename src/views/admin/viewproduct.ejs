@@ -221,6 +221,10 @@
                             <form action="/admin/update-product/<%= product._id %>" method="GET">
                                 <button type="submit">Update</button>
                             </form>
+                            <form action="/admin/delete-product/<%= product._id %>" method="POST">
+                                <button type="submit">Delete</button>
+                            </form>
+                         
                         </td>
                     </tr>
                 <% }); %>
