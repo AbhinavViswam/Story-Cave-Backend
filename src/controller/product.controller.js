@@ -102,4 +102,18 @@ const deleteProductConfirmation=async(req,res)=>{
     res.status(200).redirect("/admin/view-product");
 }
 
-module.exports={addProduct,updateProduct,viewProduct,getProductDetails,deleteProduct,deleteProductConfirmation}
+
+const blockUnblockProduct=async(req,res)=>{
+    const {id}=req.params;
+    const product=await Product.findById(id)
+    if (!product) {
+        return res.status(404).json({ error: "Product not found" });
+    }
+    product.isBlocked=!product.isBlocked;
+
+    await product.save()
+    
+    res.status(200).redirect("/admin/view-product");  
+}
+
+module.exports={addProduct,updateProduct,viewProduct,getProductDetails,deleteProduct,deleteProductConfirmation,blockUnblockProduct}
