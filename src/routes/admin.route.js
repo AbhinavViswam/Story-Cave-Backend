@@ -11,7 +11,7 @@ router.get('/dashboard', verifyAdmin, (req, res) => {
 
 router.route("/add-product")
 .get(verifyAdmin, (req, res) => {
-    res.status(200).render("admin/addproduct")
+    res.status(200).render("admin/addproduct",{error:"",message:""})
 })
     .post(verifyAdmin, upload.single('image'), (req, res) => {
         addProduct(req, res);
