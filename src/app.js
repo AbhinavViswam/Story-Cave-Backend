@@ -14,7 +14,7 @@ app.set('views', path.join(__dirname, 'views'));
 const userRouter=require('./routes/user.route.js')
 
 app.use('/users',userRouter)
-app.get('/', (req, res) => {
+app.get('/', (req, res) => {  
     res.redirect('/users/login'); 
   });
 const adminRouter = require('./routes/admin.route.js');

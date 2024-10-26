@@ -1,15 +1,5 @@
 
 const Product=require("../models/products.models.js")
-const {Category,Subcategory}=require("../models/category.models.js")
-
-const showCategoriesWithSubcategories = async (req, res) => {
-    try {
-        const categories = await Category.find().populate('subcategories');
-        res.render("admin/addproduct", { categories, error: "", message: "" });
-    } catch (error) {
-        res.status(500).json({ message: error });
-    }
-};
 
 const addProduct=async (req,res)=>{
     const {name,description,category,price,stock}=req.body
@@ -125,4 +115,4 @@ const blockUnblockProduct=async(req,res)=>{
     res.status(200).redirect("/admin/view-product");  
 }
 
-module.exports={addProduct,updateProduct,viewProduct,getProductDetails,deleteProduct,deleteProductConfirmation,blockUnblockProduct,showCategoriesWithSubcategories}
+module.exports={addProduct,updateProduct,viewProduct,getProductDetails,deleteProduct,deleteProductConfirmation,blockUnblockProduct}

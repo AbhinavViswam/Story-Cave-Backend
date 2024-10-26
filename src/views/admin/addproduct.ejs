@@ -224,15 +224,7 @@
         <h1>Add Product</h1>
         <input type="text" name="name" placeholder="Name" required>
         <textarea name="description" placeholder="Description" required></textarea>
-        <select name="category" id="category" required>
-            <% categories.forEach(category => { %>
-                <optgroup label="<%= category.name %>">
-                    <% category.subcategories.forEach(subcategory => { %>
-                        <option value="<%= subcategory._id %>"><%= subcategory.name %></option>
-                    <% }) %>
-                </optgroup>
-            <% }) %>
-        </select>
+        <input type="text" name="category" placeholder="Category" required>
         <input type="text" id="price" name="price" required pattern="^\d+(\.\d{1,2})?$" inputmode="decimal" title="Please enter a valid price (e.g. 49.99)" placeholder="Price">
         <input type="text" id="stock" name="stock" required pattern="^\d+$" inputmode="numeric" title="Please enter a valid stock quantity (only numbers)" placeholder="Stock">
         <input type="file" name="image" required>
