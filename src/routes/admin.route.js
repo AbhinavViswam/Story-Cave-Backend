@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const verifyAdmin = require('../middleware/AdminAuth.middleware.js');
 const upload = require("../middleware/multer.middleware.js")
-const { addProduct, updateProduct, viewProduct, getProductDetails, deleteProduct, deleteProductConfirmation, blockUnblockProduct} = require("../controller/product.controller.js")
+const { addProduct, updateProduct, viewProduct, getProductDetails, deleteProduct, deleteProductConfirmation, blockUnblockProduct} = require("../controller/product.controller.js");
+const { addCategory, addSubCategory, viewCategory, viewSubCategory } = require('../controller/category.controller.js');
 
 
 router.get('/dashboard', verifyAdmin, (req, res) => {
@@ -10,7 +11,7 @@ router.get('/dashboard', verifyAdmin, (req, res) => {
 });
 
 router.route("/add-product")
-.get(verifyAdmin, (req, res) => {
+.get(verifyAdmin,(req, res) => {
     res.status(200).render("admin/addproduct",{error:"",message:""})
 })
     .post(verifyAdmin, upload.single('image'), (req, res) => {
@@ -46,4 +47,23 @@ router.route("/block-unblock-product/:id")
     .post(verifyAdmin, (req, res) => {
         blockUnblockProduct(req, res);
     })
+
+//category
+
+router.route("/add-category")
+.post(verifyAdmin,(req,res)=>{
+    addCategory(req,res)
+})
+.get(verifyAdmin,(req,res)=>{
+    viewCategory(req,res)
+})
+
+router.route("/add-sub-category/:categoryId")
+.post(verifyAdmin, (req,res)=>{
+    addSubCategory(req,res)
+})
+.get(verifyAdmin,(req,res)=>{
+    viewSubCategory(req,res)
+})
+
 module.exports = router;
