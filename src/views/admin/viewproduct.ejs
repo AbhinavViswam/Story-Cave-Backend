@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - View All Products</title>
-    
+
     <!-- Google Font for better typography -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     
@@ -20,22 +20,22 @@
             flex-direction: column;
             align-items: center;
         }
-        
+
         h1 {
             text-align: center;
             margin-top: 10px;
             font-weight: 500;
             color: #ffffff;
         }
-        
+
         .table-container {
             width: 90%;
             margin: 20px auto;
-            max-height: 500px; /* Set a max height for the table container */
-            overflow-y: auto; /* Allow vertical scrolling */
-            overflow-x: auto; /* Allow horizontal scrolling for the container */
+            max-height: 500px;
+            overflow-y: auto;
+            overflow-x: auto;
             border-radius: 8px;
-            position: relative; /* Required for sticky positioning */
+            position: relative;
         }
 
         table {
@@ -47,44 +47,46 @@
             overflow: hidden;
             min-width: 800px;
         }
-        
+
         th, td {
             padding: 15px;
             text-align: center;
         }
-        
+
         th {
             background-color: #ff512f;
             color: white;
             text-transform: uppercase;
             font-weight: 700;
-            position: sticky; /* Keep the headers fixed while scrolling */
-            top: 0; /* Sticks to the top */
-            z-index: 2; /* Ensure it is above other content */
+            position: sticky;
+            top: 0;
+            z-index: 2;
         }
-        
+
         td {
             font-size: 14px;
             color: #ffffff;
         }
-        
+
         tr:nth-child(even) {
             background-color: rgba(255, 255, 255, 0.05);
         }
-        
+
         img {
             width: 100px;
             height: auto;
             border-radius: 8px;
         }
-        
+
         .actions {
             display: flex;
             justify-content: center;
             gap: 10px;
         }
-        
-        button {
+
+        /* Fix the button width and color for Block/Unblock */
+        .actions button {
+            width: 100px; /* Set a fixed width for consistency */
             background-color: #ff00005b;
             color: white;
             border: none;
@@ -92,12 +94,24 @@
             font-size: 14px;
             cursor: pointer;
             border-radius: 4px;
+            transition: background-color 0.3s ease;
         }
-        
+
+        /* Block button - red */
+        .actions .block-btn {
+            background-color: red;
+        }
+
+        /* Unblock button - blue */
+        .actions .unblock-btn {
+            background-color: blue;
+        }
+
+        /* Hover effect */
         button:hover {
             background-color: #ff512f;
         }
-        
+
         a {
             text-align: center;
             display: inline-block;
@@ -109,7 +123,7 @@
             font-weight: bold;
             border-radius: 4px;
         }
-        
+
         a:hover {
             background-color: #ff512f;
         }
@@ -132,44 +146,20 @@
         .add-product-container {
             width: 90%;
             display: flex;
-            justify-content: space-between; /* Align buttons at opposite sides */
+            justify-content: space-between;
             margin-bottom: 20px;
         }
 
         @media (max-width: 768px) {
             table {
-                display: block; /* Change to block for responsiveness */
-                overflow-x: auto; /* Allow horizontal scrolling */
-                white-space: nowrap; /* Prevent table cells from breaking */
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
             }
-            
+
             th, td {
                 padding: 10px;
-                font-size: 12px; /* Adjust font size */
-            }
-
-            /* Stack layout for mobile screens */
-            .product-card {
-                display: flex;
-                flex-direction: column;
-                background-color: rgba(255, 255, 255, 0.1);
-                border-radius: 8px;
-                padding: 10px;
-                margin: 10px 0;
-            }
-
-            .product-card img {
-                width: 80px; /* Adjust image size */
-            }
-
-            .product-card h2 {
-                font-size: 16px; /* Adjust product name font size */
-                margin: 5px 0;
-            }
-
-            .product-card p {
-                font-size: 12px; /* Adjust description font size */
-                margin: 5px 0;
+                font-size: 12px;
             }
 
             .add-product-container {
@@ -178,7 +168,7 @@
             }
 
             a {
-                width: 80%; /* Adjust button width on small screens */
+                width: 80%;
                 margin: 5px 0;
             }
         }
@@ -198,6 +188,7 @@
                     <th>Price</th>
                     <th>Stock</th>
                     <th>Image</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -217,6 +208,9 @@
                                 No Image
                             <% } %>
                         </td>
+                        <td>
+                            <%= product.isBlocked ? "Blocked" : "Active" %>
+                        </td>
                         <td class="actions">
                             <form action="/admin/update-product/<%= product._id %>" method="GET">
                                 <button type="submit">Update</button>
@@ -224,7 +218,14 @@
                             <form action="/admin/delete-product/<%= product._id %>" method="POST">
                                 <button type="submit">Delete</button>
                             </form>
-                         
+                            <form action="/admin/block-unblock-product/<%= product._id %>" method="POST">
+                                <!-- Toggle button with red and blue for Block/Unblock -->
+                                <button 
+                                    type="submit" 
+                                    class="<%= product.isBlocked ? 'unblock-btn' : 'block-btn' %>">
+                                    <%= product.isBlocked ? "Unblock" : "Block" %>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 <% }); %>

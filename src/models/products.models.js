@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Category=require('./category.models.js')
 
 const ProductSchema = new mongoose.Schema({
     name: {
@@ -18,13 +19,18 @@ const ProductSchema = new mongoose.Schema({
         default: 0
     },
     category: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Category",
         required: true,
         trim: true
     },
     price: {
         type: Number,
         required: true
+    },
+    offerprice:{
+        type:Number,
+        required:true
     },
     stock: {
         type: Number,
@@ -34,6 +40,10 @@ const ProductSchema = new mongoose.Schema({
     image: {
         type:String,
         required: true
+    },
+    isBlocked:{
+        type:Boolean,
+        default:false
     }
 }, {
     timestamps: true

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Subcategory</title>
+</head>
+<body>
+    <form action="/admin/add-subcategory" method="post">
+        <h1>Add Subcategory</h1>
+        <input type="text" name="name" placeholder="Subcategory Name" required>
+        
+        <select name="categoryId" required>
+            <option value="">Select Category</option>
+            <% categories.forEach(category => { %>
+                <option value="<%= category._id %>"><%= category.name %></option>
+            <% }) %>
+        </select>
+        
+        <% if (error) { %>
+            <div class="error-message"><%= error %></div>
+        <% } %>
+        <% if (message) { %>
+            <div class="success-message"><%= message %></div>
+        <% } %>
+        
+        <button type="submit">Add Subcategory</button>
+        <a href="/admin/dashboard">Go Back</a>
+    </form>
+</body>
+</html>
