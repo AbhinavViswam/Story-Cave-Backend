@@ -3,7 +3,8 @@ const router = express.Router();
 const verifyAdmin = require('../middleware/AdminAuth.middleware.js');
 const upload = require("../middleware/multer.middleware.js")
 const { addProduct, updateProduct, viewProduct, getProductDetails, deleteProduct, deleteProductConfirmation, blockUnblockProduct} = require("../controller/product.controller.js");
-const { addCategory, addSubCategory, viewCategory, viewSubCategory } = require('../controller/category.controller.js');
+const { addCategory, addSubCategory, viewCategory, viewSubCategory, updateCategory,viewUpdateSubCategory,updateSubCategory,deleteCategory} = require('../controller/category.controller.js');
+const Category = require('../models/category.models.js');
 
 
 router.get('/dashboard', verifyAdmin, (req, res) => {
@@ -64,6 +65,30 @@ router.route("/add-sub-category/:categoryId")
 })
 .get(verifyAdmin,(req,res)=>{
     viewSubCategory(req,res)
+})
+
+
+router.route("/update-category/:categoryId")
+.post(verifyAdmin, (req,res)=>{
+    updateCategory(req,res)
+})
+.get(verifyAdmin,async (req,res)=>{
+    const {categoryId}=req.params
+    const category=await Category.findById(categoryId)
+    res.render("admin/updatecategory",{categoryid:categoryId,error:"",message:"",categoryName:category.name})
+})
+
+router.route("/update-sub-category/:categoryId/:subCategoryId")
+.post(verifyAdmin, (req,res)=>{
+    updateSubCategory(req,res)
+})
+.get(verifyAdmin,async (req,res)=>{
+   viewUpdateSubCategory(req,res)
+})
+
+router.route("/delete-category/:categoryId")
+.post(verifyAdmin, (req,res)=>{
+    deleteCategory(req,res)
 })
 
 module.exports = router;

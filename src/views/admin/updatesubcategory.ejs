@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/admin/update-sub-category/<%= categoryId %>/<%= subCategoryId %>" method="post">
+        <input type="text" value="<%= subCategoryName %>" name="subCategoryName">
+        <input type="submit" value="Update">
+    </form>
+    <% if (error) { %>
+        <div class="error-message">
+            <%= error %>
+        </div>
+    <% } %>
+
+    <% if (message) { %>
+        <div class="success-message">
+            <%= message %>
+        </div>
+    <% } %>
+    <a href="/admin/add-sub-category/<%= categoryId %>">Go back</a>
+</body>
+</html>

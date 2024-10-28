@@ -10,14 +10,33 @@
         <input type="text" name="name">
         <input type="submit" value="Submit">
     </form>
+    <div>
+        
+        <% if (error) { %>
+            <div class="error-message">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <% if (message) { %>
+            <div class="success-message">
+                <%= message %>
+            </div>
+        <% } %>
+    </div>
 
     <div>
         <% categories.forEach((category) => { %>
             <div>
               <h3><%= category.name %></h3>
               <a href="/admin/add-sub-category/<%= category._id %>">Add Subcategory</a>
+              <a href="/admin/update-category/<%= category._id %>">Update</a>
+              <form action="/admin/delete-category/<%= category._id %>" method="post">
+                <input type="submit" value="Delete">
+              </form>
             </div>
           <% }) %>
     </div>
+    <a href="/admin/dashboard">Go Back</a>
 </body>
 </html>

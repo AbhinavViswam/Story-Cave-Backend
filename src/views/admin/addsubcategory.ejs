@@ -16,11 +16,13 @@
             <% subcategories.forEach((subcategory) => { %>
                 <div>
                     <h3><%= subcategory.name %></h3>
+                    <a href="/admin/update-sub-category/<%= categoryId %>/<%= subcategory._id  %>">Update</a>
                 </div>
             <% }) %>
         <% } else { %>
             <p>No subcategories available.</p>
         <% } %>
     </div>
+    <a href="/admin/add-category">Go Back</a>
 </body>
 </html>
