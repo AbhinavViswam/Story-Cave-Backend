@@ -17,7 +17,6 @@ async function generateAccessTokenAndRefreshToken(userId){
 
 const registerUser=async function(req,res){
         try {
-                
                 const {fullName,password,email}=req.body 
                 if(fullName=="" || password=="" || email==""){
                         return res.status(400).render('user/register',{error:"All Fields are required"})

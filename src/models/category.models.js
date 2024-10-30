@@ -1,18 +1,12 @@
 const mongoose=require('mongoose')
 
-const subCategorySchema=new mongoose.Schema({
-    name:{
-        type:String,
-        required:true
-    }
-})
-
 const categorySchema=new mongoose.Schema({
     name:{
         type:String,
-        required:true
-    },
-    subcategories:[subCategorySchema]
+        required:true,
+        uppercase:true,
+        unique:true
+    }
 },
 {
     timestamps:true

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - View All Products</title>
 
-    <!-- Google Font for better typography -->
+   
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     
     <!-- Basic Styling -->
@@ -182,10 +182,10 @@
             <thead>
                 <tr>
                     <th>Product Name</th>
-                    <th>Description</th>
                     <th>Rating</th>
                     <th>Category</th>
                     <th>Price</th>
+                    <th>Offer Price</th>
                     <th>Stock</th>
                     <th>Image</th>
                     <th>Status</th>
@@ -196,14 +196,14 @@
                 <% products.forEach(product => { %>
                     <tr>
                         <td><%= product.name %></td>
-                        <td><%= product.description %></td>
                         <td><%= product.rating %></td>
-                        <td><%= product.category %></td>
+                        <td><%= product.category.name %></td>
                         <td>$<%= product.price %></td>
+                        <td>$<%= product.offerprice  %></td>
                         <td><%= product.stock %></td>
                         <td>
                             <% if (product.image) { %>
-                                <img src="/<%= product.image %>" alt="Product Image">
+                                <img src="<%= product.image %>" alt="Product Image">
                             <% } else { %>
                                 No Image
                             <% } %>
@@ -219,7 +219,6 @@
                                 <button type="submit">Delete</button>
                             </form>
                             <form action="/admin/block-unblock-product/<%= product._id %>" method="POST">
-                                <!-- Toggle button with red and blue for Block/Unblock -->
                                 <button 
                                     type="submit" 
                                     class="<%= product.isBlocked ? 'unblock-btn' : 'block-btn' %>">

@@ -5,12 +5,23 @@ const ProductSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        uppercase:true
     },
     description: {
         type: String,
         required: true,
         trim: true
+    },
+    author:{
+        type:String,
+        required:true,
+        uppercase:true
+    },
+    language:{
+        type:String,
+        required:true,
+        uppercase:true
     },
     rating: {
         type: Number,
@@ -21,8 +32,8 @@ const ProductSchema = new mongoose.Schema({
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref:"Category",
-        required: true,
-        trim: true
+        trim: true,
+        required:true
     },
     price: {
         type: Number,
@@ -30,7 +41,7 @@ const ProductSchema = new mongoose.Schema({
     },
     offerprice:{
         type:Number,
-        required:true
+        default:null
     },
     stock: {
         type: Number,

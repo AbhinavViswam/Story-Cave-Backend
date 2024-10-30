@@ -1,38 +1,43 @@
 
 const Product=require("../models/products.models.js")
+const Category=require("../models/category.models.js")
 
 const addProduct=async (req,res)=>{
-    const {name,description,category,price,stock}=req.body
+    const categories=await Category.find();
+
+    const {name,description,author,language,category,price,offerprice,stock}=req.body
    
     const image = req.file ? req.file.path.replace('src/public/', '') : "no image";
    
-
     try {
-        if(!name || !description || !category || !price || !stock ){
+        if(!name || !description || !author || !language || !category || !price || !stock ){
             res.status(400).render("admin/addproduct",{error:"All Fields are required",message:""})
         }
         const add_product=new Product({
             name,
             description,
+            author,
+            language,
             category,
             price,
+            offerprice,
             rating:0,
             stock,
             image
         })
         const pdct =await add_product.save();
         if(!pdct){
-            res.status(500).render("admin/addproduct",{error:"error saving to database",message:""})
+            res.status(500).render("admin/addproduct",{error:"error saving to database",message:"",categories})
         }
-        res.status(200).render("admin/addproduct",{error:"",message:"Product added"});
+        res.status(200).render("admin/addproduct",{error:"",message:"Product added",categories});
     } catch (error) {
-        res.status(500).render("admin/addproduct",{error:"error saving to database",message:""})
+        res.status(500).render("admin/addproduct",{error:"error saving to database",message:"",categories})
     }
 }
 
 const viewProduct=async(req,res)=>{
     try {
-        const products=await Product.find()
+        const products=await Product.find().populate('category')
         res.status(200).render('admin/viewproduct',{products});
     } catch (error) {
         res.status(500).json({error:"Error to fetch data"})
@@ -41,12 +46,13 @@ const viewProduct=async(req,res)=>{
 
 const getProductDetails = async (req, res) => {
     const { id } = req.params;
+    const categories=await Category.find();
     try {
-        const product = await Product.findById(id);
+        const product = await Product.findById(id).populate('category');
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }
-        res.status(200).render("admin/updateproduct", { product });
+        res.status(200).render("admin/updateproduct", { product ,categories});
     } catch (err) {
         res.status(500).json({ message: "Server error", error: err.message });
     }
@@ -54,14 +60,13 @@ const getProductDetails = async (req, res) => {
 
 const updateProduct=async(req,res)=>{
     const {id}=req.params;
-    const{name,description,price,stock,category}=req.body
+    const{name,description,price,stock,category,language,offerprice,author}=req.body
     const newImage=req.file?req.file.path:null
     const product = await Product.findById(id);
     if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }
-
-    if(!name || !description || !price || !stock || !category){
+    if(!name || !description || !price || !stock || !category || !author || !offerprice || !language){
         return res.status(400).json({message:"all fields are required"})
     }
 
@@ -71,6 +76,9 @@ const updateProduct=async(req,res)=>{
             name,
             description,
             price,
+            language,
+            offerprice,
+            author,
             stock,
             category,
             image:newImage?newImage:product.image
@@ -86,7 +94,7 @@ const updateProduct=async(req,res)=>{
 
 const deleteProduct = async (req, res) => {
     const { id } = req.params;
-        const product = await Product.findById(id);
+        const product = await Product.findById(id).populate('category');
         if (!product) {
             return res.status(404).json({ error: "Product not found" });
         }

@@ -20,41 +20,7 @@ const viewCategory=async(req,res)=>{
     res.render("admin/addcategory",{categories,error:"",message:""})
 }
 
-const viewSubCategory = async (req, res) => {
-    try {
-        const category = await Category.findById(req.params.categoryId);
-        if (!category) {
-            return res.status(404).json({ error: "Category not found" });
-        }
-        res.render("admin/addsubcategory", { subcategories: category.subcategories, categoryId: category._id });
-    } catch (error) {
-        console.error(error); // Log the error for debugging
-        res.status(500).json({ error: "Server error while fetching subcategories" });
-    }
-};
 
-
-const addSubCategory=async(req,res)=>{
-    const {categoryId}=req.params
-    const {subCategoryName}=req.body
-
-    if(!categoryId){
-        return res.status(404).json({error:"No category id found"})
-    }
-    if(!subCategoryName){
-        return res.render("admin/addsubcategory", { subcategories: category.subcategories, categoryId: category._id });
-    }
-
-    const category=await Category.findById(categoryId);
-    if(!category){
-        return res.render("admin/addsubcategory", { subcategories: category.subcategories, categoryId: category._id });
-    }
-
-    category.subcategories.push({name:subCategoryName})
-    await category.save();
-
-    res.render("admin/addsubcategory", { subcategories: category.subcategories, categoryId: category._id });
-}
 
 const updateCategory=async(req,res)=>{
     const {categoryId}=req.params
@@ -70,48 +36,6 @@ const updateCategory=async(req,res)=>{
     await category.save()
     res.render("admin/updatecategory",{message:"Category Updated",error:"",categoryid:categoryId,categoryName:category.name})
 
-}
-
-const viewUpdateSubCategory=async(req,res)=>{
-    
-        const { categoryId, subCategoryId } = req.params;
-    
-        try {
-            const category = await Category.findById(categoryId);
-            if (!category) {
-                return res.status(404).json({ error: "Category not found" });
-            }
-    
-            const subcategory = category.subcategories.id(subCategoryId);
-            if (!subcategory) {
-                return res.status(404).json({ error: "Subcategory not found" });
-            }
-    
-            res.render("admin/updatesubcategory", {
-                categoryId,
-                subCategoryId,
-                subCategoryName: subcategory.name,
-                message: "",
-                error: ""
-            });
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: "Server error" });
-        }
-    
-}
-
-const updateSubCategory=async(req,res)=>{
-    const {categoryId,subCategoryId}=req.params
-    const {subCategoryName}=req.body
-    if(!subCategoryName){
-        return res.render("/admin/updatesubcategory",{error:"All fields are required",message:"",categoryId,subCategoryId,subCategoryName:subcategory.name})
-    }
-    const category=await Category.findById(categoryId)
-    const subcategory = category.subcategories.id(subCategoryId);
-    subcategory.name=subCategoryName;
-    await category.save();
-    res.render("admin/updatesubcategory",{error:"",message:"Done",categoryId,subCategoryId,subCategoryName:subcategory.name})
 }
 
 const deleteCategory = async (req, res) => {
@@ -146,4 +70,4 @@ const deleteCategory = async (req, res) => {
     }
 };
 
-module.exports={addCategory,addSubCategory,viewCategory,viewSubCategory,updateCategory,viewUpdateSubCategory,updateSubCategory,deleteCategory}
+module.exports={addCategory,viewCategory,updateCategory,deleteCategory}

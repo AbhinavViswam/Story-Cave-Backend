@@ -223,13 +223,22 @@
     <form action="/admin/add-product" method="post" enctype="multipart/form-data">
         <h1>Add Product</h1>
         <input type="text" name="name" placeholder="Name" required>
-        <textarea name="description" placeholder="Description" required></textarea>
-        <input type="text" name="category" placeholder="Category" required>
+        <textarea name="description" id="textArea" placeholder="Description" maxlength="200" required></textarea>
+        <div id="charCount">Characters remaining: 200</div>
+        <input type="text" name="author" placeholder="author">
+        <input type="text" name="language" placeholder="language">
+        <select name="category" id="category" required style="color:black">
+            <option value="NoCategory" default>Category</option>
+           <% categories.forEach((category)=>{ %>
+            <option value="<%=category._id%>"><%= category.name %></option>
+         <%  })  %>
+        </select>
         <input type="text" id="price" name="price" required pattern="^\d+(\.\d{1,2})?$" inputmode="decimal" title="Please enter a valid price (e.g. 49.99)" placeholder="Price">
+        <input type="text" id="price" name="offerprice" required pattern="^\d+(\.\d{1,2})?$" inputmode="decimal" title="Please enter a valid price (e.g. 49.99)" placeholder="Offer Price">
         <input type="text" id="stock" name="stock" required pattern="^\d+$" inputmode="numeric" title="Please enter a valid stock quantity (only numbers)" placeholder="Stock">
         <input type="file" name="image" required>
 
-        <% if (error) { %>
+        <% if (error) { %>*
             <div class="error-message">
                 <%= error %>
             </div>
@@ -240,9 +249,26 @@
                 <%= message %>
             </div>
         <% } %>
-
         <input type="submit" value="Add Product">
         <a href="/admin/view-product">Go Back</a>
     </form>
+
+    <script>
+        const textArea = document.getElementById('textArea');
+        const charCountDisplay = document.getElementById('charCount');
+        const maxChars = 200;
+
+        textArea.addEventListener('input', () => {
+            const currentLength = textArea.value.length;
+            const remainingChars = maxChars - currentLength;
+            charCountDisplay.textContent = `Characters remaining: ${remainingChars}`;
+
+            // Prevent typing beyond the max length
+            if (currentLength >= maxChars) {
+                textArea.value = textArea.value.substring(0, maxChars);
+            }
+        });
+    </script>
+
 </body>
 </html>

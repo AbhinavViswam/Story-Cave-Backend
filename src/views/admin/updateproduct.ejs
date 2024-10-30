@@ -265,22 +265,33 @@
         
         <div class="form-group">
             <label for="description">Description:</label>
-            <textarea id="description" name="description" required><%= product.description %></textarea>
+            <textarea id="textArea" name="description" required><%= product.description %></textarea>
         </div>
+        <div id="charCount">Characters remaining: 200</div>
+        <input type="text" name="author" placeholder="author" required value="<%= product.author  %>">
+
+        <input type="text" name="language" placeholder="language" required value="<%= product.language  %>">
 
         <div class="form-group">
             <label for="price">Price:</label>
-            <input type="number" id="price" name="price" value="<%= product.price %>" required>
+            <input type="number" id="price" name="price" value="<%= product.price %>" required pattern="^\d+(\.\d{1,2})?$" inputmode="decimal" title="Please enter a valid price (e.g. 49.99)">
         </div>
+
+        <input type="text" name="offerprice" required value="<%= product.offerprice  %>" pattern="^\d+(\.\d{1,2})?$" inputmode="decimal" title="Please enter a valid price (e.g. 49.99)" >
 
         <div class="form-group">
             <label for="stock">Stock:</label>
-            <input type="number" id="stock" name="stock" value="<%= product.stock %>" required>
+            <input type="number" id="stock" name="stock" value="<%= product.stock %>" required pattern="^\d+$" inputmode="numeric" title="Please enter a valid stock quantity (only numbers)">
         </div>
 
         <div class="form-group">
             <label for="category">Category:</label>
-            <input type="text" id="category" name="category" value="<%= product.category %>" required>
+            <select name="category" id="category" style="color: black;">
+                <option value="<%= product.category._id %>"><%= product.category.name %></option>
+                <% categories.forEach(element => { %>
+                  <option value="<%= element._id  %>"><%= element.name %></option> 
+             <%   }); %>
+            </select>
         </div>
 
         <div class="form-group">
@@ -293,5 +304,22 @@
             <a href="/admin/view-product">Go Back</a>
         </div>
     </form>
+    
+    <script>
+        const textArea = document.getElementById('textArea');
+        const charCountDisplay = document.getElementById('charCount');
+        const maxChars = 200;
+
+        textArea.addEventListener('input', () => {
+            const currentLength = textArea.value.length;
+            const remainingChars = maxChars - currentLength;
+            charCountDisplay.textContent = `Characters remaining: ${remainingChars}`;
+
+            // Prevent typing beyond the max length
+            if (currentLength >= maxChars) {
+                textArea.value = textArea.value.substring(0, maxChars);
+            }
+        });
+    </script>
 </body>
 </html>

@@ -3,7 +3,7 @@ const router = express.Router();
 const verifyAdmin = require('../middleware/AdminAuth.middleware.js');
 const upload = require("../middleware/multer.middleware.js")
 const { addProduct, updateProduct, viewProduct, getProductDetails, deleteProduct, deleteProductConfirmation, blockUnblockProduct} = require("../controller/product.controller.js");
-const { addCategory, addSubCategory, viewCategory, viewSubCategory, updateCategory,viewUpdateSubCategory,updateSubCategory,deleteCategory} = require('../controller/category.controller.js');
+const { addCategory, viewCategory, updateCategory,deleteCategory} = require('../controller/category.controller.js');
 const Category = require('../models/category.models.js');
 
 
@@ -12,8 +12,9 @@ router.get('/dashboard', verifyAdmin, (req, res) => {
 });
 
 router.route("/add-product")
-.get(verifyAdmin,(req, res) => {
-    res.status(200).render("admin/addproduct",{error:"",message:""})
+.get(verifyAdmin,async (req, res) => {
+    const categories=await Category.find();
+    res.status(200).render("admin/addproduct",{error:"",message:"",categories})
 })
     .post(verifyAdmin, upload.single('image'), (req, res) => {
         addProduct(req, res);
@@ -59,15 +60,6 @@ router.route("/add-category")
     viewCategory(req,res)
 })
 
-router.route("/add-sub-category/:categoryId")
-.post(verifyAdmin, (req,res)=>{
-    addSubCategory(req,res)
-})
-.get(verifyAdmin,(req,res)=>{
-    viewSubCategory(req,res)
-})
-
-
 router.route("/update-category/:categoryId")
 .post(verifyAdmin, (req,res)=>{
     updateCategory(req,res)
@@ -78,13 +70,6 @@ router.route("/update-category/:categoryId")
     res.render("admin/updatecategory",{categoryid:categoryId,error:"",message:"",categoryName:category.name})
 })
 
-router.route("/update-sub-category/:categoryId/:subCategoryId")
-.post(verifyAdmin, (req,res)=>{
-    updateSubCategory(req,res)
-})
-.get(verifyAdmin,async (req,res)=>{
-   viewUpdateSubCategory(req,res)
-})
 
 router.route("/delete-category/:categoryId")
 .post(verifyAdmin, (req,res)=>{

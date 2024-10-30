@@ -33,7 +33,7 @@
     <div class="container">
         <h1>Are you sure you want to delete this product?</h1>
         <p><strong>Product Name:</strong> <%= product.name %></p>
-        <p><strong>Category:</strong> <%= product.category %></p>
+        <p><strong>Category:</strong> <%= product.category.name %></p>
 
         <!-- Form to confirm deletion -->
         <form action="/admin/delete-product/<%= pdct_id %>/confirm" method="POST">
