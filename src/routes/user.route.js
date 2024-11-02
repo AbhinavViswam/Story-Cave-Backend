@@ -9,7 +9,7 @@ router.all('/register',(req,res)=>{
     registerUser(req,res)
     }
     else if(req.method=='GET'){
-        res.render('user/register',{error:""})
+        res.render('user/register',{error:"",fullName:"",email:""})
     }
 })
 router.all('/login',(req,res)=>{
@@ -17,7 +17,7 @@ router.all('/login',(req,res)=>{
     loginUser(req,res)
     }
     else if(req.method=='GET'){
-        res.render('user/login',{error:""})
+        res.render('user/login',{error:"",EMAIL:""})
     }
 })
 

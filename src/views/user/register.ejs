@@ -52,8 +52,8 @@ a {
 
 button {
     border-radius: 20px;
-    border: 1px solid #373737;
-    background-color: #4f4f4f;
+    border: 1px solid white;
+    background-color: rgb(16, 37, 60);
     color: #FFFFFF;
     font-size: 12px;
     font-weight: bold;
@@ -152,7 +152,7 @@ input {
 
 .overlay-container {
     position: absolute;
-    background: linear-gradient(to right, #4f4f4f, #000000);
+    background: linear-gradient(109.6deg, rgb(36, 45, 57) 11.2%, rgb(16, 37, 60) 51.2%, rgb(0, 0, 0) 98.6%);
     top: 0;
     right: 50%;
     width: 50%;
@@ -176,7 +176,7 @@ input {
 .overlay {
     background: #000000;
     background: -webkit-linear-gradient(to right, #000000, #4f4f4f);
-    background: linear-gradient(to right, #000000, #4f4f4f);
+    background: linear-gradient(109.6deg, rgb(36, 45, 57) 11.2%, rgb(16, 37, 60) 51.2%, rgb(0, 0, 0) 98.6%);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 0;
@@ -251,11 +251,11 @@ input {
     <div class="form-container sign-in-container">
         <form action="/users/register" method="post">
             <h1>Sign Up</h1>
-            <input type="text" name="fullName" id="fullName" placeholder="Fullname" required>
-            <input type="email" name="email" id="email" placeholder="Email" required>
+            <input type="text" name="fullName" id="fullName" placeholder="Fullname" required value="<% if(fullName!=="") %><%= fullName %>">
+            <input type="email" name="email" id="email" placeholder="Email" required value="<% if(email!=="") %><%= email %>">
             <input type="password" name="password" id="password" placeholder="Password" required>
-            <span><div class="error-message <%= error ? 'active' : '' %>"><%= error || '' %></div></span>
             <button>Sign Up</button>
+            <span><div class="error-message <%= error ? 'active' : '' %>"><%= error || '' %></div></span>
         </form>
     </div>
     <div class="overlay-container">

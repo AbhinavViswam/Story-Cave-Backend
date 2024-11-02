@@ -53,7 +53,7 @@ a {
 button {
 	border-radius: 20px;
 	border: 1px solid #373737;
-	background-color: #4f4f4f;
+	background-color: rgb(16, 37, 60);
 	color: #FFFFFF;
 	font-size: 12px;
 	font-weight: bold;
@@ -168,7 +168,7 @@ input {
 .overlay {
 	background: #FF416C;
 	background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);
-	background: linear-gradient(to right, #000000, #4f4f4f);
+	background: linear-gradient(109.6deg, rgb(36, 45, 57) 11.2%, rgb(16, 37, 60) 51.2%, rgb(0, 0, 0) 98.6%);
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: 0 0;
@@ -244,8 +244,7 @@ input {
 	<div class="form-container sign-in-container">
 		<form action="/users/login" method="post">
 			<h1>Sign in</h1>
-			
-            <input type="email" name="email" id="email" placeholder="Email" required>
+            <input type="email" name="email" id="email" placeholder="Email" required value="<% if(EMAIL!=="") %><%= EMAIL %>">
 			<input type="password" name="password" id="password" placeholder="Password" required>
             <span><div class="error-message <%= error ? 'active' : '' %>"><%= error || '' %></div></span>
 			<a href="/users/forgot-password">Forgot your password?</a>
