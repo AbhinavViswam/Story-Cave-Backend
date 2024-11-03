@@ -52,7 +52,7 @@ const getProductDetails = async (req, res) => {
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }
-        res.status(200).render("admin/updateproduct", { product ,categories});
+        res.status(200).render("admin/updateproduct", { product ,categories,message:"",error:""});
     } catch (err) {
         res.status(500).json({ message: "Server error", error: err.message });
     }
@@ -64,10 +64,10 @@ const updateProduct=async(req,res)=>{
     const newImage=req.file?req.file.path:null
     const product = await Product.findById(id);
     if (!product) {
-            return res.status(404).json({ message: "Product not found" });
+            return res.status(404).json({ message: "Product not found",name,description,price,language,offerprice,author,stock,category,message:"",error:""});
         }
     if(!name || !description || !price || !stock || !category || !author || !offerprice || !language){
-        return res.status(400).json({message:"all fields are required"})
+        return res.status(400).json({message:"all fields are required",name,description,price,language,offerprice,author,stock,category,message:"",error:""})
     }
 
     const updateData=await Product.findByIdAndUpdate(

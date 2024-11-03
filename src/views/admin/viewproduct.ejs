@@ -4,18 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - View All Products</title>
-
    
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- Basic Styling -->
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #080710;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f6f5f7;
+            color: #333;
             margin: 0;
             padding: 0;
-            color: #fff;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -23,9 +21,9 @@
 
         h1 {
             text-align: center;
-            margin-top: 10px;
-            font-weight: 500;
-            color: #ffffff;
+            margin-top: 30px;
+            font-weight: 700;
+            color: #333;
         }
 
         .table-container {
@@ -33,116 +31,108 @@
             margin: 20px auto;
             max-height: 500px;
             overflow-y: auto;
-            overflow-x: auto;
             border-radius: 8px;
-            position: relative;
+            background: linear-gradient(to right, #000428, #004e92);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            background-color: #ffffff;
             border-radius: 8px;
             overflow: hidden;
             min-width: 800px;
+            color: #333;
         }
 
         th, td {
-            padding: 15px;
+            padding: 12px 15px;
             text-align: center;
+            font-size: 14px;
         }
 
         th {
-            background-color: #ff512f;
-            color: white;
+            background-color: #00294d;
+            color: #f6f5f7;
             text-transform: uppercase;
             font-weight: 700;
             position: sticky;
             top: 0;
-            z-index: 2;
         }
 
         td {
             font-size: 14px;
-            color: #ffffff;
         }
 
         tr:nth-child(even) {
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: #f0f0f0;
         }
 
         img {
-            width: 100px;
+            width: 80px;
             height: auto;
             border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
 
         .actions {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        /* Fix the button width and color for Block/Unblock */
         .actions button {
-            width: 100px; /* Set a fixed width for consistency */
-            background-color: #ff00005b;
-            color: white;
+            width: 90px;
+            background-color: #008cba;
+            color: #fff;
             border: none;
             padding: 8px 12px;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
             border-radius: 4px;
+            text-transform: uppercase;
             transition: background-color 0.3s ease;
         }
 
-        /* Block button - red */
         .actions .block-btn {
-            background-color: red;
+            background-color: #d9534f;
         }
 
-        /* Unblock button - blue */
         .actions .unblock-btn {
-            background-color: blue;
+            background-color: #5bc0de;
         }
 
-        /* Hover effect */
         button:hover {
-            background-color: #ff512f;
+            background-color: #555;
         }
 
         a {
-            text-align: center;
             display: inline-block;
             margin: 10px;
-            padding: 10px;
-            background-color: #ff00005b;
-            color: white;
+            padding: 12px 18px;
+            background-color: #0056b3;
+            color: #f6f5f7;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 700;
             border-radius: 4px;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
         }
 
         a:hover {
-            background-color: #ff512f;
+            background-color: #333;
         }
 
-        /* Scrollbar styling */
         .table-container::-webkit-scrollbar {
-            width: 10px;
+            width: 8px;
         }
 
         .table-container::-webkit-scrollbar-thumb {
-            background: #ff512f;
+            background: #24373c;
             border-radius: 8px;
         }
 
-        .table-container::-webkit-scrollbar-thumb:hover {
-            background: #dd2476;
-        }
-
-        /* Align "Add Product" and "Go To Dashboard" buttons */
         .add-product-container {
             width: 90%;
             display: flex;
@@ -151,10 +141,14 @@
         }
 
         @media (max-width: 768px) {
+            .table-container {
+                width: 100%;
+            }
+
             table {
+                min-width: 100%;
                 display: block;
                 overflow-x: auto;
-                white-space: nowrap;
             }
 
             th, td {
@@ -168,7 +162,7 @@
             }
 
             a {
-                width: 80%;
+                width: 100%;
                 margin: 5px 0;
             }
         }
@@ -199,7 +193,7 @@
                         <td><%= product.rating %></td>
                         <td><%= product.category.name %></td>
                         <td>$<%= product.price %></td>
-                        <td>$<%= product.offerprice  %></td>
+                        <td>$<%= product.offerprice %></td>
                         <td><%= product.stock %></td>
                         <td>
                             <% if (product.image) { %>
@@ -219,9 +213,7 @@
                                 <button type="submit">Delete</button>
                             </form>
                             <form action="/admin/block-unblock-product/<%= product._id %>" method="POST">
-                                <button 
-                                    type="submit" 
-                                    class="<%= product.isBlocked ? 'unblock-btn' : 'block-btn' %>">
+                                <button type="submit" class="<%= product.isBlocked ? 'unblock-btn' : 'block-btn' %>">
                                     <%= product.isBlocked ? "Unblock" : "Block" %>
                                 </button>
                             </form>

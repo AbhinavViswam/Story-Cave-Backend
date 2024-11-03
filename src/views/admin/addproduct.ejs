@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product</title>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * {
             padding: 0;
@@ -14,207 +13,127 @@
         }
 
         body {
-            background-color: #080710;
-            font-family: 'Poppins', sans-serif;
+            background-color: #f6f5f7;
+            font-family: 'Montserrat', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            flex-direction: column;
+            padding: 20px;
         }
 
-        /* Form styling */
         form {
-            max-width: 500px;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.13);
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
-            padding: 50px 35px;
+            max-width: 400px;
+            background: #fff;
+            border-radius: 8px;
+            padding: 30px 25px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
-        form * {
-            font-family: 'Poppins', sans-serif;
-            color: #ffffff;
-            letter-spacing: 0.5px;
-            outline: none;
-            border: none;
-        }
-
-        form h1 {
-            font-size: 2rem;
-            font-weight: 500;
-            line-height: 2.5rem;
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
             text-align: center;
             margin-bottom: 20px;
+            color: #333;
         }
 
-        input, textarea {
-            display: block;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.07);
-            border-radius: 3px;
-            padding: 0 10px;
-            margin-top: 20px;
-            font-size: 1rem;
-            font-weight: 300;
-            transition: background-color 0.3s ease;
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row input,
+        .form-row select,
+        textarea {
+            flex: 1;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.875rem;
+            color: #333;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #333;
+            background-color: #fff;
         }
 
         textarea {
-            height: 100px;
             resize: none;
+            width: 100%;
+            height: 80px;
+            margin-top: 5px;
+
         }
 
-        input:focus, textarea:focus {
-            background-color: rgba(255, 255, 255, 0.1);
+        #charCount {
+            font-size: 0.75rem;
+            color: #666;
+            text-align: right;
+            margin-top: 5px;
         }
 
-        /* Submit Button Styling */
         input[type="submit"] {
-            margin-top: 20px;
-            background: linear-gradient(135deg, #ff512f, #dd2476);
+            width: 100%;
+            background: linear-gradient(135deg,#00294d, #0056b3);
             color: #fff;
-            padding: 15px 0;
-            font-size: 1.125rem;
+            font-size: 1rem;
             font-weight: 600;
+            padding: 10px;
             border-radius: 5px;
             cursor: pointer;
-            box-shadow: 0 5px 10px rgba(255, 81, 47, 0.3);
-            transition: all 0.4s ease;
+            transition: background 0.3s ease;
+            margin-top: 15px;
         }
 
         input[type="submit"]:hover {
-            background: linear-gradient(135deg, #dd2476, #ff512f);
-            box-shadow: 0 10px 15px rgba(255, 81, 47, 0.5);
-            transform: translateY(-5px);
+            background: linear-gradient(135deg, #555, #333);
         }
 
-        /* Error and Success Message Styling */
-        .error-message, .success-message {
+        .error-message,
+        .success-message {
             margin-top: 15px;
-            padding: 15px;
+            padding: 10px;
             border-radius: 5px;
             font-size: 0.875rem;
             text-align: center;
-            font-weight: 500;
         }
 
         .error-message {
             color: #ff4f4f;
             background-color: rgba(255, 79, 79, 0.1);
-            border: 1px solid #ff4f4f;
         }
 
         .success-message {
             color: #4caf50;
             background-color: rgba(76, 175, 80, 0.1);
-            border: 1px solid #4caf50;
         }
 
-        /* "Go Back" Link Styling */
         a {
             display: block;
-            margin-top: 20px;
-            color: #ff512f;
-            font-size: 1rem;
-            font-weight: 600;
+            margin-top: 15px;
+            color: #00294d;
             text-align: center;
             text-decoration: none;
-            background: rgba(255, 255, 255, 0.07);
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: all 0.4s ease;
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            transition: color 0.3s ease;
         }
 
         a:hover {
-            background: linear-gradient(135deg, #ff512f, #dd2476);
-            color: #fff;
-            box-shadow: 0 5px 10px rgba(255, 81, 47, 0.5);
-            transform: translateY(-3px);
+            color: #333;
         }
 
-        /* Responsive Design for landscape and portrait modes */
-        @media (orientation: landscape) {
-            form {
-                padding: 30px 20px;
-                max-width: 80%;
-            }
-
-            form h1 {
-                font-size: 1.75rem;
-            }
-
-            input, textarea {
-                font-size: 0.875rem;
-            }
-
-            input[type="submit"] {
-                padding: 12px 0;
-                font-size: 1rem;
-            }
-
-            a {
-                font-size: 0.875rem;
-                padding: 8px 15px;
-            }
-        }
-
-        @media (orientation: portrait) {
-            form {
-                max-width: 90%;
-                padding: 25px 20px;
-            }
-
-            form h1 {
-                font-size: 1.5rem;
-            }
-
-            input, textarea {
-                font-size: 0.875rem;
-            }
-
-            input[type="submit"] {
-                padding: 12px 0;
-                font-size: 0.875rem;
-            }
-
-            a {
-                font-size: 0.875rem;
-            }
-        }
-
-        /* Media Query for small screens */
+        /* Media Queries */
         @media (max-width: 480px) {
-            form {
-                padding: 20px 15px;
-            }
-
-            form h1 {
-                font-size: 1.25rem;
-            }
-
-            input, textarea {
-                height: 40px;
-                font-size: 0.75rem;
-            }
-
-            input[type="submit"] {
-                padding: 10px 0;
-                font-size: 0.75rem;
-            }
-
-            a {
-                font-size: 0.75rem;
-                padding: 8px 15px;
-            }
-
-            .error-message, .success-message {
-                font-size: 0.75rem;
-                padding: 8px;
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -222,33 +141,43 @@
 <body>
     <form action="/admin/add-product" method="post" enctype="multipart/form-data">
         <h1>Add Product</h1>
-        <input type="text" name="name" placeholder="Name" required>
-        <textarea name="description" id="textArea" placeholder="Description" maxlength="200" required></textarea>
+        <div class="form-row">
+        <input type="text" name="name" placeholder="Product Name" required val>
+        </div>
+
+        <textarea name="description" id="textArea" placeholder="Product Description" maxlength="200" required></textarea>
         <div id="charCount">Characters remaining: 200</div>
-        <input type="text" name="author" placeholder="author">
-        <input type="text" name="language" placeholder="language">
-        <select name="category" id="category" required style="color:black">
-            <option value="NoCategory" default>Category</option>
-           <% categories.forEach((category)=>{ %>
-            <option value="<%=category._id%>"><%= category.name %></option>
-         <%  })  %>
-        </select>
-        <input type="text" id="price" name="price" required pattern="^\d+(\.\d{1,2})?$" inputmode="decimal" title="Please enter a valid price (e.g. 49.99)" placeholder="Price">
-        <input type="text" id="price" name="offerprice" required pattern="^\d+(\.\d{1,2})?$" inputmode="decimal" title="Please enter a valid price (e.g. 49.99)" placeholder="Offer Price">
-        <input type="text" id="stock" name="stock" required pattern="^\d+$" inputmode="numeric" title="Please enter a valid stock quantity (only numbers)" placeholder="Stock">
+
+        <div class="form-row">
+            <input type="text" name="author" placeholder="Author">
+            <input type="text" name="language" placeholder="Language">
+        </div>
+
+        <div class="form-row">
+            <select name="category" required>
+                <option value="NoCategory">Select Category</option>
+                <% categories.forEach((category) => { %>
+                    <option value="<%= category._id %>"><%= category.name %></option>
+                <% }) %>
+            </select>
+            <input type="text" name="price" required pattern="^\d+(\.\d{1,2})?$" placeholder="Price">
+        </div>
+
+        <div class="form-row">
+            <input type="text" name="offerprice" pattern="^\d+(\.\d{1,2})?$" placeholder="Offer Price">
+            <input type="text" name="stock" required pattern="^\d+$" placeholder="Stock">
+        </div>
+
         <input type="file" name="image" required>
 
-        <% if (error) { %>*
-            <div class="error-message">
-                <%= error %>
-            </div>
+        <% if (error) { %>
+            <div class="error-message"><%= error %></div>
         <% } %>
 
         <% if (message) { %>
-            <div class="success-message">
-                <%= message %>
-            </div>
+            <div class="success-message"><%= message %></div>
         <% } %>
+
         <input type="submit" value="Add Product">
         <a href="/admin/view-product">Go Back</a>
     </form>
@@ -259,16 +188,10 @@
         const maxChars = 200;
 
         textArea.addEventListener('input', () => {
-            const currentLength = textArea.value.length;
-            const remainingChars = maxChars - currentLength;
+            const remainingChars = maxChars - textArea.value.length;
             charCountDisplay.textContent = `Characters remaining: ${remainingChars}`;
-
-            // Prevent typing beyond the max length
-            if (currentLength >= maxChars) {
-                textArea.value = textArea.value.substring(0, maxChars);
-            }
+            if (remainingChars < 0) textArea.value = textArea.value.substring(0, maxChars);
         });
     </script>
-
 </body>
 </html>
