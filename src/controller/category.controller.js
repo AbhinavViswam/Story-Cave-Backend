@@ -1,11 +1,19 @@
 const Category=require("../models/category.models.js")
+const Product=require("../models/products.models.js")
 
 const addCategory=async(req,res)=>{
     const {name}=req.body
+    try{
     if(!name){
         const categories=await Category.find()
         return res.status(400).render("admin/addcategory",{categories,message:"",error:""})
     }
+    const categoryExists=await Category.findOne({name});
+    if(categoryExists){
+        const categories=await Category.find()
+        return res.status(400).render("admin/addcategory",{categories,message:"",error:"Category already Exists"})
+    }
+    
     const newCategory=await Category.create({name})
     if(!newCategory){
         const categories=await Category.find()
@@ -13,11 +21,19 @@ const addCategory=async(req,res)=>{
     }
     const categories = await Category.find();
     res.status(200).render("admin/addcategory",{categories,error:"",message:"Category Successfully added"})
+}catch(err){
+    res.status(500).json({error:"Unknown error occured"})
+}
 }
 
 const viewCategory=async(req,res)=>{
-    const categories=await Category.find()
-    res.render("admin/addcategory",{categories,error:"",message:""})
+    
+try {
+        const categories=await Category.find()
+        res.render("admin/addcategory",{categories,error:"",message:""})
+} catch (error) {
+    res.status(500).json({error:"Unknown eroor occured"})
+}
 }
 
 
@@ -25,23 +41,36 @@ const viewCategory=async(req,res)=>{
 const updateCategory=async(req,res)=>{
     const {categoryId}=req.params
     const {categoryName}=req.body;
-    const category=await Category.findById(categoryId)
-    if(!category){
-        return res.render("admin/updatecategory",{message:"",error:"no category found",categoryid:categoryId,categoryName:category.name})
+    try {
+        const category=await Category.findById(categoryId)
+        if(!category){
+            return res.render("admin/updatecategory",{message:"",error:"no category found",categoryid:categoryId,categoryName:category.name})
+        }
+        if(!categoryName){
+            return res.render("admin/updatecategory",{message:"",error:"All fields are required",categoryid:categoryId,categoryName:category.name})
+        }
+        category.name=categoryName;
+        await category.save()
+        res.render("admin/updatecategory",{message:"Category Updated",error:"",categoryid:categoryId,categoryName:category.name})
+    
+    } catch (error) {
+        res.status(500).json({error:"Unknown error occured"})
     }
-    if(!categoryName){
-        return res.render("admin/updatecategory",{message:"",error:"All fields are required",categoryid:categoryId,categoryName:category.name})
-    }
-    category.name=categoryName;
-    await category.save()
-    res.render("admin/updatecategory",{message:"Category Updated",error:"",categoryid:categoryId,categoryName:category.name})
-
 }
 
 const deleteCategory = async (req, res) => {
     const { categoryId } = req.params;
 
     try {
+        const productExists=await Product.exists({category:categoryId})
+        if(productExists){
+            return res.status(400).render("admin/addcategory", { 
+                categories: await Category.find(), 
+                message: "", 
+                error: "Cannot delete category with linked products" 
+            });
+        }
+        
         const category = await Category.findByIdAndDelete(categoryId);
 
         if (!category) {

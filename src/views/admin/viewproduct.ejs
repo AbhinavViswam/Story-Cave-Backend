@@ -187,6 +187,7 @@
                 </tr>
             </thead>
             <tbody>
+                <% if(products) {%>
                 <% products.forEach(product => { %>
                     <tr>
                         <td><%= product.name %></td>
@@ -197,7 +198,7 @@
                         <td><%= product.stock %></td>
                         <td>
                             <% if (product.image) { %>
-                                <img src="<%= product.image %>" alt="Product Image">
+                                <img src="<%= product.image %>" alt="Product Image" height="200px", width="100px">
                             <% } else { %>
                                 No Image
                             <% } %>
@@ -219,7 +220,7 @@
                             </form>
                         </td>
                     </tr>
-                <% }); %>
+                <% })} %>
             </tbody>
         </table>
     </div>

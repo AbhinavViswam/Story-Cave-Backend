@@ -7,7 +7,7 @@ const addProduct=async (req,res)=>{
 
     const {name,description,author,language,category,price,offerprice,stock}=req.body
    
-    const image = req.file ? req.file.path.replace('src/public/', '') : "no image";
+    const image = req.file ? req.file.path.replace('src/public/', '').replace(/\\/g, "/"): "no image";
    
     try {
         if(!name || !description || !author || !language || !category || !price || !stock ){
@@ -61,7 +61,7 @@ const getProductDetails = async (req, res) => {
 const updateProduct=async(req,res)=>{
     const {id}=req.params;
     const{name,description,price,stock,category,language,offerprice,author}=req.body
-    const newImage=req.file?req.file.path:null
+    const newImage=req.file?req.file.path.replace(/\\/g, "/"):null
     const product = await Product.findById(id);
     if (!product) {
             return res.status(404).json({ message: "Product not found",name,description,price,language,offerprice,author,stock,category,message:"",error:""});
