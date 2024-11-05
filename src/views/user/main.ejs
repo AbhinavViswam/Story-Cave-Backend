@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Listings</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
+ <style>
+    /* General Styles */
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f6f5f7;
+  color: #333;
+}
+
+.container {
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 20%;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar h3 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.category-list li {
+  list-style: none;
+  margin: 5px 0;
+}
+
+.category-list a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+/* Main Content */
+main {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 24px;
+  color: #333;
+}
+
+.filter-options {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.sort select {
+  padding: 5px;
+  font-size: 14px;
+}
+
+/* Product Grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.product-card {
+  background-color: #fff;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.product-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.product-info h3 {
+  font-size: 18px;
+  color: #333;
+}
+
+.product-info .price {
+  font-size: 16px;
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.view-details {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.view-details:hover {
+  background-color: #0056b3;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination a {
+  color: #007bff;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.pagination span {
+  font-size: 14px;
+  color: #333;
+}
+
+ </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar for Filters -->
+    <aside>
+      <div class="sidebar">
+        <h3>Categories</h3>
+        <ul class="category-list">
+          <% categories.forEach(category => { %>
+            <li>
+              <a href="?category=<%= category._id %>"><%= category.name %></a>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content for Product Listings -->
+    <main>
+      <h1>Our Products</h1>
+      
+      <!-- Filter and Sort Options -->
+      <div class="filter-options">
+        <div class="sort">
+          <label for="sort">Sort by:</label>
+          <select id="sort" name="sort" onchange="location = this.value;">
+            <option value="?sort=price-asc">Price: Low to High</option>
+            <option value="?sort=price-desc">Price: High to Low</option>
+            <option value="?sort=popularity">Most Popular</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="product-grid">
+        <% products.forEach(product => { %>
+          <div class="product-card">
+            <div class="product-image">
+              <img src="<%= product.image %>" alt="<%= product.name %>">
+            </div>
+            <div class="product-info">
+              <h3><%= product.name %></h3>
+              <p class="price">$<%= product.price.toFixed(2) %></p>
+              <p class="price">$<%= product.offerprice.toFixed(2) %></p>
+              <p><%= product.description.substring(0, 100) %>...</p>
+              <a href="/users/product/<%= product._id %>/details" class="view-details">View Details</a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+
+      <!-- Pagination Controls -->
+      
+    </main>
+  </div>
+
+  <script>
+    // JavaScript to handle sorting
+    document.getElementById('sort').addEventListener('change', function () {
+      window.location.href = this.value;
+    });
+  </script>
+</body>
+</html>

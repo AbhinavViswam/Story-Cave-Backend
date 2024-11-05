@@ -24,6 +24,10 @@ const UserSchema=new mongoose.Schema({
         enum:['customer','admin'],
         default:'customer'
     },
+    isBlocked:{
+        type:Boolean,
+        default:false
+    },
     refreshToken:{
         type:String,
     }

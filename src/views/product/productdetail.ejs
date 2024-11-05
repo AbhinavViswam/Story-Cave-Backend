@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <link rel="stylesheet" href="/styles.css"> <!-- Link to your main CSS file -->
+    <style>
+        /* Inline CSS for quick customization */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f6f5f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        .product-container {
+            background-color: #fff;
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .product-image img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .product-details {
+            margin-top: 20px;
+        }
+
+        .product-details h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .product-details p {
+            margin: 5px 0;
+        }
+
+        .price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #27ae60;
+            margin: 10px 0;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #888;
+            font-size: 16px;
+        }
+
+        .offer-price {
+            color: #e74c3c;
+            font-size: 20px;
+        }
+
+        .product-meta {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="product-container">
+        <!-- Product Image -->
+        <div class="product-image">
+            <img src="<%= product.image %>" alt="<%= product.name %> image">
+        </div>
+        
+        <!-- Product Details -->
+        <div class="product-details">
+            <h1><%= product.name %></h1>
+            <p><%= product.description %></p>
+            
+            <!-- Meta information -->
+            <p class="product-meta">Author: <%= product.author %></p>
+            <p class="product-meta">Language: <%= product.language %></p>
+            <p class="product-meta">Category: <%= product.category.name %></p>
+            
+            <!-- Pricing -->
+            <div class="price-section">
+                <% if (product.offerprice < product.price) { %>
+                    <p class="original-price">$<%= product.price.toFixed(2) %></p>
+                    <p class="offer-price">$<%= product.offerprice.toFixed(2) %></p>
+                <% } else { %>
+                    <p class="price">$<%= product.price.toFixed(2) %></p>
+                <% } %>
+            </div>
+        </div>
+        <a href="/users/main">All Products</a>
+    </div>
+</body>
+</html>

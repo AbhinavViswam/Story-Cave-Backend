@@ -1,4 +1,4 @@
-const {registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword}=require('../controller/user.controller.js')
+const {registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,listProducts,productDetails}=require('../controller/user.controller.js')
 const {checkEmailSet,checkOtpSet}=require('../middleware/ForgotPasswordAuth.middleware.js');
 const express=require('express')
 const router=express.Router()
@@ -47,10 +47,14 @@ router.route('/set-new-password')
         setNewPassword(req, res);
     });
 
-router.all('/main',(req,res)=>{
-    if(req.method=='GET'){
-        res.render('main')
-    }
+router.route('/main')
+.get((req,res)=>{
+    listProducts(req,res)
+})
+
+router.route('/product/:productId/details')
+.get((req,res)=>{
+    productDetails(req,res)
 })
 
 module.exports=router

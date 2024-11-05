@@ -5,7 +5,7 @@ const upload = require("../middleware/multer.middleware.js")
 const { addProduct, updateProduct, viewProduct, getProductDetails, deleteProduct, deleteProductConfirmation, blockUnblockProduct} = require("../controller/product.controller.js");
 const { addCategory, viewCategory, updateCategory,deleteCategory} = require('../controller/category.controller.js');
 const Category = require('../models/category.models.js');
-
+const {listUser,blockUnblockUser} = require('../controller/admin.controller.js');
 
 router.get('/dashboard', verifyAdmin, (req, res) => {
     res.render('admin/dashboard', { user: req.user });
@@ -70,10 +70,20 @@ router.route("/update-category/:categoryId")
     res.render("admin/updatecategory",{categoryid:categoryId,error:"",message:"",categoryName:category.name})
 })
 
-
 router.route("/delete-category/:categoryId")
 .post(verifyAdmin, (req,res)=>{
     deleteCategory(req,res)
+})
+
+// user
+
+router.route("/list-user")
+.get(verifyAdmin,(req,res)=>{
+    listUser(req,res);
+})
+router.route("/list-user/:userId/block-unblock")
+.post(verifyAdmin,(req,res)=>{
+    blockUnblockUser(req,res)
 })
 
 module.exports = router;

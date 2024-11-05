@@ -1,6 +1,9 @@
 const User= require('../models/user.models.js')
+const Products=require("../models/products.models.js")
+const Category=require("../models/category.models.js")
 const bcrypt=require("bcrypt")
 const genOTP=require("../middleware/OTP.middleware.js")
+const Product = require('../models/products.models.js')
 
 async function generateAccessTokenAndRefreshToken(userId){
         try {
@@ -165,4 +168,22 @@ catch(err){
         console.log(err,"error occured");
 }
 }
-module.exports={registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword}
+
+// products
+
+const listProducts=async(req,res)=>{
+        const products=await Products.find();
+        const categories=await Category.find();
+        if(!products){
+                return res.render({error:"No products available"})
+        }
+        res.render("user/main",{products,categories})
+}
+
+const productDetails=async(req,res)=>{
+        const {productId}=req.params
+        const product=await Product.findById(productId).populate('category')
+        res.render("product/productdetail",{product});
+}
+
+module.exports={registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,listProducts,productDetails}
