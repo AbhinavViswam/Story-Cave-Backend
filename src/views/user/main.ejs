@@ -11,20 +11,69 @@ body {
   font-family: 'Montserrat', sans-serif;
   background-color: #f6f5f7;
   color: #333;
+  margin: 0;
 }
 
 .container {
   display: flex;
 }
 
+/* Navbar */
+.navbar {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar h2 {
+  margin: 0;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-info img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
 /* Sidebar */
 .sidebar {
   width: 20%;
+  max-width: 250px;
   padding: 20px;
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: -250px;
+  height: 100%;
+  overflow-y: auto;
+  transition: left 0.3s ease;
+  z-index: 1000;
 }
 
+.sidebar.open {
+  left: 0;
+}
+
+.toggle-sidebar {
+  cursor: pointer;
+  color: #333;
+  font-size: 20px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+/* Sidebar Header */
 .sidebar h3 {
   color: #333;
   margin-bottom: 10px;
@@ -40,26 +89,40 @@ body {
   text-decoration: none;
 }
 
+.filter-options form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filter-options select, .filter-options button {
+  padding: 8px;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.filter-options button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.filter-options button:hover {
+  background-color: #0056b3;
+}
+
 /* Main Content */
 main {
   flex-grow: 1;
   padding: 20px;
+  margin-left: 250px;
 }
 
 h1 {
   font-size: 24px;
   color: #333;
-}
-
-.filter-options {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 20px;
-}
-
-.sort select {
-  padding: 5px;
-  font-size: 14px;
 }
 
 /* Product Grid */
@@ -107,86 +170,91 @@ h1 {
   background-color: #0056b3;
 }
 
-/* Pagination */
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.pagination a {
-  color: #007bff;
-  text-decoration: none;
-  margin: 0 10px;
-}
-
-.pagination span {
-  font-size: 14px;
-  color: #333;
+/* Toggle Button for Sidebar */
+.toggle-sidebar-btn {
+  cursor: pointer;
+  color: #fff;
+  background-color: #007bff;
+  padding: 10px;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
 }
 
  </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Sidebar for Filters -->
-    <aside>
-      <div class="sidebar">
-        <h3>Categories</h3>
-        <ul class="category-list">
-          <% categories.forEach(category => { %>
-            <li>
-              <a href="?category=<%= category._id %>"><%= category.name %></a>
-            </li>
-          <% }) %>
-        </ul>
-      </div>
-    </aside>
-
-    <!-- Main Content for Product Listings -->
-    <main>
-      <h1>Our Products</h1>
-      
-      <!-- Filter and Sort Options -->
-      <div class="filter-options">
-        <div class="sort">
-          <label for="sort">Sort by:</label>
-          <select id="sort" name="sort" onchange="location = this.value;">
-            <option value="?sort=price-asc">Price: Low to High</option>
-            <option value="?sort=price-desc">Price: High to Low</option>
-            <option value="?sort=popularity">Most Popular</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Product Grid -->
-      <div class="product-grid">
-        <% products.forEach(product => { %>
-          <div class="product-card">
-            <div class="product-image">
-              <img src="<%= product.image %>" alt="<%= product.name %>">
-            </div>
-            <div class="product-info">
-              <h3><%= product.name %></h3>
-              <p class="price">$<%= product.price.toFixed(2) %></p>
-              <p class="price">$<%= product.offerprice.toFixed(2) %></p>
-              <p><%= product.description.substring(0, 100) %>...</p>
-              <a href="/users/product/<%= product._id %>/details" class="view-details">View Details</a>
-            </div>
-          </div>
-        <% }) %>
-      </div>
-
-      <!-- Pagination Controls -->
-      
-    </main>
+  <!-- Navbar -->
+  <div class="navbar">
+    <h2>Product Listings</h2>
+    <div class="user-info">
+      <span></span>
+    </div>
   </div>
 
+  <!-- Sidebar Toggle Button -->
+  <button class="toggle-sidebar-btn" onclick="toggleSidebar()">☰ Filter Options</button>
+
+  <!-- Sidebar for Filters -->
+  <div class="sidebar" id="sidebar">
+    <h3>Filter Options</h3>
+    <form action="/users/product?" method="GET">
+      <label for="category-select">Category:</label>
+      <select id="category-select" name="category">
+        <option value="">All Categories</option>
+        <% categories.forEach(category => { %>
+          <option value="<%= category._id %>" <%= selectedCategory == category._id ? 'selected' : '' %>>
+            <%= category.name %>
+          </option>
+        <% }) %>
+      </select>
+
+      <label for="language-select">Language:</label>
+      <select id="language-select" name="language">
+        <option value="">All Languages</option>
+        <% languages.forEach(language => { %>
+          <option value="<%= language %>" <%= selectedLanguage === language ? 'selected' : '' %>>
+            <%= language %>
+          </option>
+        <% }) %>
+      </select>
+
+      <label for="price-select">Price:</label>
+      <select name="price">
+        <option value="">All</option>
+        <option value="asc">Low to High</option>
+        <option value="desc">High to Low</option>
+      </select>
+
+      <button type="submit">Apply Filter</button>
+    </form>
+  </div>
+
+  <!-- Main Content for Product Listings -->
+  <main>
+    <h1>Our Products</h1>
+    <div class="product-grid">
+      <% products.forEach(product => { %>
+        <div class="product-card">
+          <div class="product-image">
+            <img src="<%= product.image %>" alt="<%= product.name %>">
+          </div>
+          <div class="product-info">
+            <h3><%= product.name %></h3>
+            <p class="price" style="text-decoration: line-through; color: red;">$<%= product.price.toFixed(2) %></p>
+            <p class="price">$<%= product.offerprice.toFixed(2) %></p>
+            <a href="/users/product/<%= product._id %>/details" class="view-details">View Details</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </main>
+
   <script>
-    // JavaScript to handle sorting
-    document.getElementById('sort').addEventListener('change', function () {
-      window.location.href = this.value;
-    });
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("open");
+    }
   </script>
 </body>
 </html>

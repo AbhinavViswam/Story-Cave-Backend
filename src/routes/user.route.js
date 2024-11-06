@@ -1,4 +1,4 @@
-const {registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,listProducts,productDetails}=require('../controller/user.controller.js')
+const {registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,listProducts,productDetails,productFilter}=require('../controller/user.controller.js')
 const {checkEmailSet,checkOtpSet}=require('../middleware/ForgotPasswordAuth.middleware.js');
 const express=require('express')
 const router=express.Router()
@@ -55,6 +55,10 @@ router.route('/main')
 router.route('/product/:productId/details')
 .get((req,res)=>{
     productDetails(req,res)
+})
+router.route('/product')
+.get((req,res)=>{
+    productFilter(req,res)
 })
 
 module.exports=router
