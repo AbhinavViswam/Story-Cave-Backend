@@ -172,7 +172,7 @@ catch(err){
 // products
 
 const listProducts=async(req,res)=>{
-        const products=await Products.find();
+        const products=await Products.find({isBlocked:false});
         const categories=await Category.find();
         if(!products){
                 return res.render({error:"No products available"})
@@ -190,8 +190,7 @@ const productFilter=async(req,res)=>{
         const {category}=req.query;
         const {language}=req.query;
         const {price}=req.query;
-
-        const filter={}
+        const filter={isBlocked:false}
         if(category){
                 filter.category=category;
         }

@@ -193,10 +193,11 @@ h1 {
   </div>
 
   <!-- Sidebar Toggle Button -->
-  <button class="toggle-sidebar-btn" onclick="toggleSidebar()">☰ Filter Options</button>
+  <button class="toggle-sidebar-btn" onclick="toggleSidebar()">Filter Options</button>
 
   <!-- Sidebar for Filters -->
   <div class="sidebar" id="sidebar">
+    <button id="close">Close</button>
     <h3>Filter Options</h3>
     <form action="/users/product?" method="GET">
       <label for="category-select">Category:</label>
@@ -223,11 +224,12 @@ h1 {
       <select name="price">
         <option value="">All</option>
         <option value="asc">Low to High</option>
-        <option value="desc">High to Low</option>
+        <option value="des">High to Low</option>
       </select>
 
       <button type="submit">Apply Filter</button>
     </form>
+  
   </div>
 
   <!-- Main Content for Product Listings -->
@@ -237,7 +239,7 @@ h1 {
       <% products.forEach(product => { %>
         <div class="product-card">
           <div class="product-image">
-            <img src="<%= product.image %>" alt="<%= product.name %>">
+            <img src="<%= product.image %>" alt="<%= product.name %>" width="150px" height="300px">
           </div>
           <div class="product-info">
             <h3><%= product.name %></h3>
@@ -255,6 +257,13 @@ h1 {
       const sidebar = document.getElementById("sidebar");
       sidebar.classList.toggle("open");
     }
+  
+    // Close the sidebar when the 'Close' button is clicked
+    document.getElementById("close").addEventListener("click", function() {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.remove("open");
+    });
   </script>
+  
 </body>
 </html>
