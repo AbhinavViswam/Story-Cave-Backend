@@ -177,7 +177,7 @@ const listProducts=async(req,res)=>{
         if(!products){
                 return res.render({error:"No products available"})
         }
-        res.render("user/main",{products,categories})
+        res.render("user/main",{products,categories,selectedCategory:"",languages:[]})
 }
 
 const productDetails=async(req,res)=>{
@@ -186,4 +186,29 @@ const productDetails=async(req,res)=>{
         res.render("product/productdetail",{product});
 }
 
-module.exports={registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,listProducts,productDetails}
+const productFilter=async(req,res)=>{
+        const {category}=req.query;
+        const {language}=req.query;
+        const {price}=req.query;
+
+        const filter={}
+        if(category){
+                filter.category=category;
+        }
+        if (language) filter.language = language;
+
+        let pdctQuery=Products.find(filter);
+        if(price=="asc"){
+                pdctQuery=pdctQuery.sort({offerprice:1})
+        }
+        if(price=="des"){
+                pdctQuery=pdctQuery.sort({offerprice:-1});
+        }
+        const products=await pdctQuery.exec()
+        const categories=await Category.find();
+
+        const languages = [...new Set(products.map(product => product.language))];
+        res.render("user/main",{categories,products,languages,selectedCategory:category || "",selectedLanguage:language || "",selectedPriceOrder:price || ""})
+}
+
+module.exports={registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,listProducts,productDetails,productFilter}
