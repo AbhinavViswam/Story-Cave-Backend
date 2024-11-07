@@ -6,7 +6,7 @@ const { addProduct, updateProduct, viewProduct, getProductDetails, deleteProduct
 const { addCategory, viewCategory, updateCategory,deleteCategory} = require('../controller/category.controller.js');
 const Category = require('../models/category.models.js');
 const {listUser,blockUnblockUser} = require('../controller/admin.controller.js');
-
+ 
 router.get('/dashboard', verifyAdmin, (req, res) => {
     res.render('admin/dashboard', { user: req.user });
 });

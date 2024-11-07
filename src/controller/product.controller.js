@@ -61,7 +61,7 @@ const getProductDetails = async (req, res) => {
 const updateProduct=async(req,res)=>{
     const {id}=req.params;
     const{name,description,price,stock,category,language,offerprice,author}=req.body
-    const newImage=req.file?req.file.path:"";
+    const image=req.file ? req.file.path.replace(/\\/g, "/") : "";
     const product = await Product.findById(id);
     if (!product) {
             return res.status(404).json({ message: "Product not found",name,description,price,language,offerprice,author,stock,category,message:"",error:""});
@@ -81,7 +81,7 @@ const updateProduct=async(req,res)=>{
             author,
             stock,
             category,
-            image:newImage?newImage:product.image
+            image: image ? '/productImages/' + image.split('/').pop() : ''
         },
         {new:true}
     )

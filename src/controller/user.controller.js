@@ -98,11 +98,19 @@ const loginUser=async function(req,res){
         if(!isPasswordValid){
                 return res.status(400).render('user/login',{error:"Invalid Password",EMAIL:email})
         }
+        if(user.isBlocked==true){
+                return res.status(403).render('user/login',{error:"Your Account is currently blocked",EMAIL:email})
+        }
         const {refreshToken,accessToken}= await generateAccessTokenAndRefreshToken(user._id)
-         return res.status(200)
+         res.status(200)
          .cookie('accessToken',accessToken,{httpOnly:true})
          .cookie('refreshToken',refreshToken,{ maxAge: 600000,httpOnly:true})
-         .redirect(user.role==="admin"?'/admin/dashboard':'/users/main')
+         if(user.role==="admin"){
+                res.redirect("/admin/dashboard")
+         }
+         else{
+                res.redirect("/users/main")
+         }
 }
 const forgotPassword=async function(req,res){
         const {email}=req.body
