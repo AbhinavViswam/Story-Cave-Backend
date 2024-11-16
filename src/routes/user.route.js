@@ -1,7 +1,10 @@
-const {registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,listProducts,productDetails,productFilter}=require('../controller/user.controller.js')
+const {registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,logoutUser,listProducts,productDetails,productFilter}=require('../controller/user.controller.js')
 const {checkEmailSet,checkOtpSet}=require('../middleware/ForgotPasswordAuth.middleware.js');
 const express=require('express')
+const jwt=require("jsonwebtoken")
+const verifyUser=require("../middleware/userAuth.middleware.js")
 const router=express.Router()
+
 
 
 router.all('/register',(req,res)=>{
@@ -12,13 +15,30 @@ router.all('/register',(req,res)=>{
         res.render('user/register',{error:"",fullName:"",email:""})
     }
 })
-router.all('/login',(req,res)=>{
-    if(req.method=='POST'){
-    loginUser(req,res)
+
+router.route('/login')
+.get((req,res)=>{
+    const userToken = req.cookies.accessTokenUser;
+    if (!userToken) {
+        return res.render('user/login', { error: "", EMAIL: "" });
     }
-    else if(req.method=='GET'){
-        res.render('user/login',{error:"",EMAIL:""})
+
+    try {
+        const decoded = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET);
+        const userId = decoded._id;
+        if(decoded.isBlocked==true){
+            res.clearCookie('accessTokenUser')
+            return res.send("Your Account is blocked")
+        }
+        res.redirect(`/users/main/${userId}`);
+    }catch (err) {
+        console.error("Token verification failed:", err.message);
+        res.clearCookie('accessTokenUser');
+        res.render('user/login', { error: "Session expired. Please log in again.", EMAIL: "" });
     }
+})
+.post((req,res)=>{
+    loginUser(req, res);
 })
 
 router.route('/forgot-password')
@@ -34,7 +54,7 @@ router.route('/verify-otp')
         const email = req.cookies.emailResetPassword;
         res.render('user/verifyOtppage', { error: "", Email: email || "" });
     })
-    .post((req, res) => {
+    .post(verifyUser,(req, res) => {
         verifyOtp(req, res);
     });
 
@@ -47,18 +67,23 @@ router.route('/set-new-password')
         setNewPassword(req, res);
     });
 
-router.route('/main')
-.get((req,res)=>{
+router.route('/main/:userId')
+.get(verifyUser,(req,res)=>{
     listProducts(req,res)
 })
 
 router.route('/product/:productId/details')
-.get((req,res)=>{
+.get(verifyUser,(req,res)=>{
     productDetails(req,res)
 })
 router.route('/product')
-.get((req,res)=>{
+.get(verifyUser,(req,res)=>{
     productFilter(req,res)
+})
+
+router.route("/logout")
+.post(verifyUser,(req,res)=>{
+    logoutUser(req,res)
 })
 
 module.exports=router

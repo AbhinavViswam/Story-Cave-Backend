@@ -1,7 +1,12 @@
 const mongoose = require('mongoose');
 const Category=require('./category.models.js')
+const { v4: uuidv4 } = require('uuid');
 
 const ProductSchema = new mongoose.Schema({
+    _id:{
+        type:String,
+        default:uuidv4
+    },
     name: {
         type: String,
         required: true,
@@ -30,7 +35,7 @@ const ProductSchema = new mongoose.Schema({
         default: 0
     },
     category: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref:"Category",
         trim: true,
         required:true

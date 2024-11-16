@@ -1,12 +1,10 @@
 const jwt = require('jsonwebtoken');
 
 function verifyAdmin(req, res, next) {
-    const token = req.cookies.accessToken;
-
+    const token = req.cookies.accessTokenAdmin;
     if (!token) {
         return res.status(403).redirect('/users/login');
-    }
-
+    } 
     try {
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         if (decoded.role !== 'admin') {

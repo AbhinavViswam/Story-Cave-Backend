@@ -4,209 +4,188 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Listings</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
- <style>
-    /* General Styles */
-body {
-  font-family: 'Montserrat', sans-serif;
-  background-color: #f6f5f7;
-  color: #333;
-  margin: 0;
-}
+  <style>
+    /* Base styles */
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #f6f5f7;
+      margin: 0;
+    }
 
-.container {
-  display: flex;
-}
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #1c1f3b, #1a1a2e);
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
 
-/* Navbar */
-.navbar {
-  background-color: #007bff;
-  color: #fff;
-  padding: 10px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+    .navbar h2 {
+      margin: 0;
+    }
 
-.navbar h2 {
-  margin: 0;
-}
+    .hamburger {
+      font-size: 1.5em;
+      cursor: pointer;
+      color: #fff;
+      display: block; /* Always show the hamburger icon */
+    }
 
-.user-info {
-  display: flex;
-  align-items: center;
-}
+    .sidebar {
+      width: 250px;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 60px;
+      left: -300px; /* Hide the sidebar initially */
+      height: 100%;
+      transition: left 0.5s ease;
+      z-index: 100;
+    }
 
-.user-info img {
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
-}
+    .sidebar.active {
+      left: 0; /* Slide in */
+    }
 
-/* Sidebar */
-.sidebar {
-  width: 20%;
-  max-width: 250px;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: fixed;
-  top: 0;
-  left: -250px;
-  height: 100%;
-  overflow-y: auto;
-  transition: left 0.3s ease;
-  z-index: 1000;
-}
+    .sidebar h3 {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
 
-.sidebar.open {
-  left: 0;
-}
+    .sidebar select,
+    .sidebar button {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1em;
+    }
 
-.toggle-sidebar {
-  cursor: pointer;
-  color: #333;
-  font-size: 20px;
-  position: absolute;
-  top: 20px;
-  left: 20px;
-}
+    .sidebar button {
+      background-color: #1c1f3b;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
 
-/* Sidebar Header */
-.sidebar h3 {
-  color: #333;
-  margin-bottom: 10px;
-}
+    .sidebar button:hover {
+      background-color: #3a3d61;
+    }
 
-.category-list li {
-  list-style: none;
-  margin: 5px 0;
-}
+    main {
+      margin-left: 270px;
+      padding: 20px;
+      transition: margin-left 0.5s ease;
+    }
 
-.category-list a {
-  color: #007bff;
-  text-decoration: none;
-}
+    main h1 {
+      font-size: 2em;
+      color: #1c1f3b;
+    }
 
-.filter-options form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
 
-.filter-options select, .filter-options button {
-  padding: 8px;
-  font-size: 14px;
-  margin-top: 10px;
-}
+    .product-card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-.filter-options button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
+    .product-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
 
-.filter-options button:hover {
-  background-color: #0056b3;
-}
+    .product-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
 
-/* Main Content */
-main {
-  flex-grow: 1;
-  padding: 20px;
-  margin-left: 250px;
-}
+    .product-info h3 {
+      font-size: 1.2em;
+      margin: 10px 0;
+      color: #333;
+    }
 
-h1 {
-  font-size: 24px;
-  color: #333;
-}
+    .original-price {
+      text-decoration: line-through;
+      color: #ff3f3f;
+    }
 
-/* Product Grid */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-}
+    .discounted-price {
+      color: #1c1f3b;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
 
-.product-card {
-  background-color: #fff;
-  padding: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
+    .view-details {
+      display: inline-block;
+      padding: 8px 12px;
+      margin-top: 10px;
+      color: #fff;
+      background-color: #1c1f3b;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
 
-.product-image img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
+    .view-details:hover {
+      background-color: #3a3d61;
+    }
 
-.product-info h3 {
-  font-size: 18px;
-  color: #333;
-}
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%; /* Full screen on mobile */
+        left: -100%; /* Hide the sidebar */
+      }
 
-.product-info .price {
-  font-size: 16px;
-  color: #27ae60;
-  font-weight: bold;
-}
+      .sidebar.active {
+        left: 0; /* Slide in when active */
+      }
 
-.view-details {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 8px 15px;
-  background-color: #007bff;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
-}
-
-.view-details:hover {
-  background-color: #0056b3;
-}
-
-/* Toggle Button for Sidebar */
-.toggle-sidebar-btn {
-  cursor: pointer;
-  color: #fff;
-  background-color: #007bff;
-  padding: 10px;
-  font-size: 18px;
-  border: none;
-  border-radius: 5px;
-}
-
- </style>
+      main {
+        margin-left: 0;
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- Navbar -->
   <div class="navbar">
-    <h2>Product Listings</h2>
+    <h2>STORY CAVE</h2>
     <div class="user-info">
-      <span></span>
+      <span><%= user.fullName %></span>
     </div>
+    <!-- Hamburger icon for sidebar toggle -->
+    <div class="hamburger" onclick="toggleSidebar()">☰</div>
   </div>
-
-  <!-- Sidebar Toggle Button -->
-  <button class="toggle-sidebar-btn" onclick="toggleSidebar()">Filter Options</button>
 
   <!-- Sidebar for Filters -->
   <div class="sidebar" id="sidebar">
-    <button id="close">Close</button>
     <h3>Filter Options</h3>
     <form action="/users/product?" method="GET">
       <label for="category-select">Category:</label>
       <select id="category-select" name="category">
         <option value="">All Categories</option>
         <% categories.forEach(category => { %>
-          <option value="<%= category._id %>" <%= selectedCategory == category._id ? 'selected' : '' %>>
-            <%= category.name %>
-          </option>
+          <option value="<%= category._id %>" <%= selectedCategory == category._id ? 'selected' : '' %>><%= category.name %></option>
         <% }) %>
       </select>
 
@@ -214,9 +193,7 @@ h1 {
       <select id="language-select" name="language">
         <option value="">All Languages</option>
         <% languages.forEach(language => { %>
-          <option value="<%= language %>" <%= selectedLanguage === language ? 'selected' : '' %>>
-            <%= language %>
-          </option>
+          <option value="<%= language %>" <%= selectedLanguage === language ? 'selected' : '' %>><%= language %></option>
         <% }) %>
       </select>
 
@@ -229,7 +206,10 @@ h1 {
 
       <button type="submit">Apply Filter</button>
     </form>
-  
+
+    <form action="/users/logout" method="post">
+      <button>logout</button>
+    </form>
   </div>
 
   <!-- Main Content for Product Listings -->
@@ -239,12 +219,12 @@ h1 {
       <% products.forEach(product => { %>
         <div class="product-card">
           <div class="product-image">
-            <img src="<%= product.image %>" alt="<%= product.name %>" width="150px" height="300px">
+            <img src="<%= product.image %>" alt="<%= product.name %>">
           </div>
           <div class="product-info">
             <h3><%= product.name %></h3>
-            <p class="price" style="text-decoration: line-through; color: red;">$<%= product.price.toFixed(2) %></p>
-            <p class="price">$<%= product.offerprice.toFixed(2) %></p>
+            <p class="price original-price">$<%= product.price.toFixed(2) %></p>
+            <p class="price discounted-price">$<%= product.offerprice.toFixed(2) %></p>
             <a href="/users/product/<%= product._id %>/details" class="view-details">View Details</a>
           </div>
         </div>
@@ -254,16 +234,10 @@ h1 {
 
   <script>
     function toggleSidebar() {
-      const sidebar = document.getElementById("sidebar");
-      sidebar.classList.toggle("open");
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('active');
+      console.log('Sidebar toggle activated'); // Debugging check
     }
-  
-    // Close the sidebar when the 'Close' button is clicked
-    document.getElementById("close").addEventListener("click", function() {
-      const sidebar = document.getElementById("sidebar");
-      sidebar.classList.remove("open");
-    });
   </script>
-  
 </body>
 </html>

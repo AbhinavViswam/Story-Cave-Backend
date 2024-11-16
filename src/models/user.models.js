@@ -1,8 +1,13 @@
 const mongoose=require('mongoose')
 const bcrypt=require('bcrypt')
 const jwt= require("jsonwebtoken")
+const { v4: uuidv4 } = require('uuid');
 
 const UserSchema=new mongoose.Schema({
+    _id:{
+        type:String,
+        default:uuidv4
+    },
     fullName:{
         type:String,
         trim:true,
@@ -52,23 +57,12 @@ UserSchema.methods.generateAccessToken=function(){
             _id:this._id,
             email:this.email,
             fullName:this.fullName,
-            role:this.role
+            role:this.role,
+            isBlocked:this.isBlocked
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
             expiresIn:process.env.ACCESS_TOKEN_EXPIRY
-        }
-    )
-}
-
-UserSchema.methods.generateRefreshToken=function(){
-    return jwt.sign(
-        {
-            _id:this._id
-        },
-        process.env.REFRESH_TOKEN_SECRET,
-        {
-            expiresIn:process.env.REFRESH_TOKEN_EXPIRY
         }
     )
 }

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookSaw</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Roboto', serif;
+        }
+        .book-card {
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        .book-card:hover .add-to-cart {
+            display: block;
+        }
+        .add-to-cart {
+            display: none;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 0.5rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        .add-to-cart:hover {
+            background-color: #333;
+            transform: scale(1.05);
+        }
+        .book-card:hover {
+            transform: scale(1.05);
+        }
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity 0.5s;
+        }
+        .fade-enter, .fade-leave-to {
+            opacity: 0;
+        }
+        .quote-slider {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .quote-slide {
+            display: none;
+            text-align: center;
+        }
+        .quote-slide.active {
+            display: block;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 50px;
+            text-align: center;
+        }
+        footer .social-icons {
+            margin-top: 10px;
+        }
+        footer .social-icons a {
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 20px;
+        }
+        footer .social-icons a:hover {
+            color: #d4a373;
+        }
+        
+    </style>
+    <script>
+        let currentBookIndex = 0;
+        const books = [
+            {
+                title: "Life Of The Wild",
+                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu feugiat amet, libero ipsum enim pharetra hac. Urna commodo, lacus ut magna velit eleifend. Amet, quis urna, a eu.",
+                image: "https://placehold.co/300x450?text=Life+Of+The+Wild",
+                genre: "Nature",
+                author: "Sanchit Howdy",
+                price: "$20"
+            },
+            {
+    title: "The Forgotten Galaxy",
+    description: "A thrilling journey through the vast expanse of space, uncovering secrets of forgotten civilizations and their technologies.",
+    image: "https://placehold.co/300x450?text=The+Forgotten+Galaxy",
+    genre: "Science Fiction",
+    author: "Elara Nova",
+    price: "$30"
+},
+{
+    title: "Whispers of the Forest",
+    description: "A poetic tale that immerses readers into the enchanting world of ancient forests and their timeless secrets.",
+    image: "https://placehold.co/300x450?text=Whispers+of+the+Forest",
+    genre: "Fantasy",
+    author: "Lena Willow",
+    price: "$18"
+},
+{
+    title: "Echoes of War",
+    description: "A gripping narrative of bravery, sacrifice, and the struggles of soldiers during a pivotal war.",
+    image: "https://placehold.co/300x450?text=Echoes+of+War",
+    genre: "Historical Fiction",
+    author: "David Kane",
+    price: "$22"
+},
+{
+    title: "Beyond the Horizon",
+    description: "A heartwarming tale of resilience and ambition, set against the backdrop of breathtaking landscapes.",
+    image: "https://placehold.co/300x450?text=Beyond+the+Horizon",
+    genre: "Drama",
+    author: "Nina Everest",
+    price: "$25"
+},
+{
+    title: "Mystic Realms",
+    description: "Embark on a spellbinding journey through worlds of magic and mystery, where heroes rise and legends are born.",
+    image: "https://placehold.co/300x450?text=Mystic+Realms",
+    genre: "Fantasy",
+    author: "Aiden Frost",
+    price: "$28"
+}
+        ];
+        function showBook(index) {
+            const book = books[index];
+            const bookTitle = document.getElementById('bookTitle');
+            const bookDescription = document.getElementById('bookDescription');
+            const bookImage = document.getElementById('bookImage');
+            bookTitle.classList.add('fade-leave-active');
+            bookDescription.classList.add('fade-leave-active');
+            bookImage.classList.add('fade-leave-active');
+            setTimeout(() => {
+                bookTitle.innerText = book.title;
+                bookDescription.innerText = book.description;
+                bookImage.src = book.image;
+                bookTitle.classList.remove('fade-leave-active');
+                bookDescription.classList.remove('fade-leave-active');
+                bookImage.classList.remove('fade-leave-active');
+                bookTitle.classList.add('fade-enter-active');
+                bookDescription.classList.add('fade-enter-active');
+                bookImage.classList.add('fade-enter-active');
+                setTimeout(() => {
+                    bookTitle.classList.remove('fade-enter-active');
+                    bookDescription.classList.remove('fade-enter-active');
+                    bookImage.classList.remove('fade-enter-active');
+                }, 500);
+            }, 500);
+        }
+        function nextBook() {
+            currentBookIndex = (currentBookIndex + 1) % books.length;
+            showBook(currentBookIndex);
+        }
+        function prevBook() {
+            currentBookIndex = (currentBookIndex - 1 + books.length) % books.length;
+            showBook(currentBookIndex);
+        }
+        function toggleFilterMenu() {
+            const filterMenu = document.getElementById('filterMenu');
+            filterMenu.classList.toggle('hidden');
+        }
+        function filterBooks(criteria, value) {
+            const filteredBooks = books.filter(book => book[criteria] === value);
+            if (filteredBooks.length > 0) {
+                currentBookIndex = books.indexOf(filteredBooks[0]);
+                showBook(currentBookIndex);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            showBook(currentBookIndex);
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+     const loginButton = document.getElementById('loginButton');
+     const dropdownMenu = document.getElementById('dropdownMenu');
+
+     loginButton.addEventListener('click', function () {
+       dropdownMenu.classList.toggle('hidden');
+     });
+
+     document.addEventListener('click', function (event) {
+       if (!loginButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+         dropdownMenu.classList.add('hidden');
+       }
+     });
+   });
+    </script>
+</head>
+<body class="bg-[#f8f5f0] text-gray-800">
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-2 max-w-screen-lg flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-4 mb-2 md:mb-0">
+                <a class="text-gray-600" href="#"><i class="fab fa-facebook-f"></i></a>
+                <a class="text-gray-600" href="#"><i class="fab fa-twitter"></i></a>
+                <a class="text-gray-600" href="#"><i class="fab fa-youtube"></i></a>
+                <a class="text-gray-600" href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="text-2xl font-bold mb-2 md:mb-0">BOOKSAW</div>
+            <div class="flex items-center space-x-4">
+                <a class="text-gray-600" href="#" id="loginButton">Account</a>
+                <a class="text-gray-600" href="#">Cart(0 $)</a>
+                <a class="text-gray-600" href="#"><i class="fas fa-search"></i></a>
+            </div>
+        </div>
+        
+            <div class="fixed top-20 left-0 w-full bg-white shadow-lg hidden z-20" id="dropdownMenu">
+             <div class="p-4">
+              <p class="text-gray-500">
+               New customer?
+              </p>
+              <a class="text-blue-500" href="#">
+               Sign Up
+              </a>
+             </div>
+             <ul class="py-2">
+              <li>
+               <a class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" href="#">
+                <i class="fas fa-user mr-2">
+                </i>
+                My Profile
+               </a>
+              </li>
+              <li>
+               <a class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" href="#">
+                <i class="fas fa-gem mr-2">
+                </i>
+                Flipkart Plus Zone
+               </a>
+              </li>
+              <li>
+               <a class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" href="#">
+                <i class="fas fa-box mr-2">
+                </i>
+                Orders
+               </a>
+              </li>
+              <li>
+               <a class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" href="#">
+                <i class="fas fa-heart mr-2">
+                </i>
+                Wishlist
+               </a>
+              </li>
+              <li>
+               <a class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" href="#">
+                <i class="fas fa-gift mr-2">
+                </i>
+                Rewards
+               </a>
+              </li>
+              <li>
+               <a class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" href="#">
+                <i class="fas fa-credit-card mr-2">
+                </i>
+                Gift Cards
+               </a>
+              </li>
+              <li>
+               <a class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" href="#">
+                <i class="fas fa-sign-out-alt mr-2">
+                </i>
+                Logout
+               </a>
+              </li>
+             </ul>
+            </div>
+    </header>
+    <nav class="bg-white shadow-sm relative z-10">
+        <div class="container mx-auto px-4 py-2 max-w-screen-lg flex justify-center space-x-4 md:space-x-8">
+            <a class="text-gray-600 hover:text-gray-800" href="#">HOME</a>
+            <a class="text-gray-600 hover:text-gray-800" href="#">FEATURED</a>
+            <a class="text-gray-600 hover:text-gray-800" href="#">POPULAR</a>
+            <a class="text-gray-600 hover:text-gray-800" href="#">OFFER</a>
+            <a class="text-gray-600 hover:text-gray-800 cursor-pointer" href="#" onclick="toggleFilterMenu()">FILTER</a>
+        </div>
+    </nav>
+    <div class="fixed top-20 left-0 w-full bg-white shadow-lg hidden z-20" id="filterMenu">
+        <div class="container mx-auto px-4 py-2 flex flex-col md:flex-row md:space-x-4">
+            <a class="block px-4 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer" onclick="filterBooks('genre', 'Nature')">Genre: Nature</a>
+            <a class="block px-4 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer" onclick="filterBooks('genre', 'Adventure')">Genre: Adventure</a>
+            <a class="block px-4 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer" onclick="filterBooks('author', 'Sanchit Howdy')">Author: Sanchit Howdy</a>
+            <a class="block px-4 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer" onclick="filterBooks('author', 'John Doe')">Author: John Doe</a>
+            <a class="block px-4 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer" onclick="filterBooks('price', '$20')">Price: $20</a>
+            <a class="block px-4 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer" onclick="filterBooks('price', '$25')">Price: $25</a>
+        </div>
+    </div>
+    <main class="container mx-auto px-4 py-16 max-w-screen-lg flex flex-col md:flex-row items-center justify-between relative">
+        <button class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md" onclick="prevBook()">
+            <i class="fas fa-arrow-left text-gray-600 opacity-50 hover:opacity-100 transition-opacity duration-300"></i>
+        </button>
+        <div class="max-w-lg text-center md:text-left">
+            <h1 class="text-3xl md:text-5xl font-bold text-gray-800 fade-leave-active" id="bookTitle">Life Of The Wild</h1>
+            <p class="mt-4 text-gray-600 fade-leave-active" id="bookDescription">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu feugiat amet, libero ipsum enim pharetra hac. Urna commodo, lacus ut magna velit eleifend. Amet, quis urna, a eu.</p>
+            <button class="mt-6 px-6 py-2 border border-gray-600 text-gray-600 hover:bg-gray-100 flex items-center mx-auto md:mx-0">
+                READ MORE
+                <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+        <div class="mt-8 md:mt-0">
+            <img alt="Book cover of 'Life Of The Wild'" class="fade-leave-active" height="450" id="bookImage" src="https://storage.googleapis.com/a1aa/image/1Z8eCsN7wEwvCqMLl56X8C8z8NSoRyWRVuheTUiYlMbIdIxTA.jpg" width="300"/>
+        </div>
+        <button class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md" onclick="nextBook()">
+            <i class="fas fa-arrow-right text-gray-600 opacity-50 hover:opacity-100 transition-opacity duration-300"></i>
+        </button>
+    </main>
+    <div class="container mx-auto px-4 py-16 max-w-screen-lg">
+        <h1 class="text-4xl font-bold text-left mb-12" style="font-family: 'Times New Roman', serif;">
+         Best Books For You
+        </h1>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+         <div class="text-center book-card">
+          <img alt="Book cover of 'Simple Way Of Piece Life'" class="mx-auto mb-4" height="300" src="https://storage.googleapis.com/a1aa/image/MrINkZVwQNZKHNcW9M6y0YS6vErW1gAoSMFfkbNNEPpZPk4JA.jpg" width="200"/>
+          <button class="add-to-cart">
+           ADD TO CART
+          </button>
+          <h2 class="text-xl font-semibold mt-4">
+           Simple Way Of Piece Life
+          </h2>
+          <p class="text-gray-600">
+           Armor Ramsey
+          </p>
+          <p class="text-green-600 font-bold">
+           $ 40.00
+          </p>
+         </div>
+         <div class="text-center book-card">
+          <img alt="Book cover of 'Great Travel At Desert'" class="mx-auto mb-4 relative" height="300" src="https://storage.googleapis.com/a1aa/image/Yf5qxh5PYXzUNKtb5eSrNMZBYbCGkTgoGoTOOpNfq9Co9QinA.jpg" width="200"/>
+          <button class="add-to-cart">
+           ADD TO CART
+          </button>
+          <h2 class="text-xl font-semibold mt-4">
+           Great Travel At Desert
+          </h2>
+          <p class="text-gray-600">
+           Sanchit Howdy
+          </p>
+          <p class="text-green-600 font-bold">
+           $ 38.00
+          </p>
+         </div>
+         <div class="text-center book-card">
+          <img alt="Book cover of 'The Lady Beauty Scarlett'" class="mx-auto mb-4" height="300" src="https://storage.googleapis.com/a1aa/image/rkIlWGvEMRLfNaaaA7HlH5CiD4hXDKbfSRjSIyFieKhk9QinA.jpg" width="200"/>
+          <button class="add-to-cart">
+           ADD TO CART
+          </button>
+          <h2 class="text-xl font-semibold mt-4">
+           The Lady Beauty Scarlett
+          </h2>
+          <p class="text-gray-600">
+           Arthur Doyle
+          </p>
+          <p class="text-green-600 font-bold">
+           $ 45.00
+          </p>
+         </div>
+         <div class="text-center book-card">
+          <img alt="Book cover of 'Once Upon A Time'" class="mx-auto mb-4" height="300" src="https://storage.googleapis.com/a1aa/image/GgG9nuabg7IjEZyMaydk65pS5NVT3cQbclx23ujJ0ZTtHS8E.jpg" width="200"/>
+          <button class="add-to-cart">
+           ADD TO CART
+          </button>
+          <h2 class="text-xl font-semibold mt-4">
+           Once Upon A Time
+          </h2>
+          <p class="text-gray-600">
+           Klien Marry
+          </p>
+          <p class="text-green-600 font-bold">
+           $ 35.00
+          </p>
+         </div>
+        </div>
+        <div class="text-center mt-8">
+         <a class="text-gray-600 hover:text-gray-800" href="#">
+          View All Products →
+         </a>
+        </div>
+     </div>
+     <main class="container mx-auto px-4 py-16" style="font-family: 'Playfair Display';">
+        <section class="text-center">
+            <h2 class="text-4xl font-bold mb-4">Quote Of The Day</h2>
+            <div class="w-16 h-1 bg-gray-400 mx-auto mb-4"></div>
+            <div class="quote-slider">
+                <div class="quote-slide active">
+                    <p class="text-xl italic text-gray-600 mb-4">
+                        “The more that you read, the more things you will know.<br>
+                        The more that you learn, the more places you’ll go.”
+                    </p>
+                    <p class="text-lg text-gray-600" style="font-family: 'Roboto';">Dr. Seuss</p>
+                </div>
+                <div class="quote-slide">
+                    <p class="text-xl italic text-gray-600 mb-4">
+                        “In the end, we will remember not the words of our enemies,<br>
+                        but the silence of our friends.”
+                    </p>
+                    <p class="text-lg text-gray-600"  style="font-family: 'Roboto';">Martin Luther King Jr.</p>
+                </div>
+                <div class="quote-slide">
+                    <p class="text-xl italic text-gray-600 mb-4">
+                        “The only limit to our realization of tomorrow<br>
+                        is our doubts of today.”
+                    </p>
+                    <p class="text-lg text-gray-600"  style="font-family: 'Roboto';">Franklin D. Roosevelt</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>
+         &copy; 2023 BookSaw. All rights reserved.
+        </p>
+        <div class="social-icons">
+         <a href="#">
+          <i class="fab fa-facebook-f">
+          </i>
+         </a>
+         <a href="#">
+          <i class="fab fa-twitter">
+          </i>
+         </a>
+         <a href="#">
+          <i class="fab fa-instagram">
+          </i>
+         </a>
+         <a href="#">
+          <i class="fab fa-linkedin-in">
+          </i>
+         </a>
+        </div>
+       </footer>
+       <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.quote-slide');
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        setInterval(nextSlide, 5000); // Change slide every 5 seconds
+       </script>
+</body>
+</html>

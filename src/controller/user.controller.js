@@ -4,17 +4,15 @@ const Category=require("../models/category.models.js")
 const bcrypt=require("bcrypt")
 const genOTP=require("../middleware/OTP.middleware.js")
 const Product = require('../models/products.models.js')
+const jwt=require("jsonwebtoken")
 
-async function generateAccessTokenAndRefreshToken(userId){
+async function generateAccessToken(userId){
         try {
                 const user= await User.findById(userId)
-                const refreshToken=user.generateRefreshToken()
                 const accessToken=user.generateAccessToken()
-                user.refreshToken=refreshToken;
-                await user.save({validateBeforeSave:false})
-                return {refreshToken,accessToken}
+                return accessToken
         } catch (error) {
-               throw new Error("Something went wrong") 
+               console.log("Something went wrong");
         }
 }
 const registerUser = async function(req, res) {
@@ -101,15 +99,14 @@ const loginUser=async function(req,res){
         if(user.isBlocked==true){
                 return res.status(403).render('user/login',{error:"Your Account is currently blocked",EMAIL:email})
         }
-        const {refreshToken,accessToken}= await generateAccessTokenAndRefreshToken(user._id)
-         res.status(200)
-         .cookie('accessToken',accessToken,{httpOnly:true})
-         .cookie('refreshToken',refreshToken,{ maxAge: 600000,httpOnly:true})
+        const accessToken= await generateAccessToken(user._id)
          if(user.role==="admin"){
+                res.status(200).cookie('accessTokenAdmin',accessToken)
                 res.redirect("/admin/dashboard")
          }
          else{
-                res.redirect("/users/main")
+                res.status(200).cookie('accessTokenUser',accessToken)
+                res.redirect(`/users/main/${user._id}`)
          }
 }
 const forgotPassword=async function(req,res){
@@ -177,21 +174,35 @@ catch(err){
 }
 }
 
+const logoutUser=async(req,res)=>{
+        res.clearCookie('accessTokenUser').redirect("/users/login");
+}
+
 // products
 
 const listProducts=async(req,res)=>{
         const products=await Products.find({isBlocked:false});
         const categories=await Category.find();
+        const accesstoken=req.cookies.accessTokenUser
+        if(!accesstoken){
+                return res.redirect("/users/login")
+        }
+        const user=jwt.verify(accesstoken,process.env.ACCESS_TOKEN_SECRET)
         if(!products){
                 return res.render({error:"No products available"})
         }
-        res.render("user/main",{products,categories,selectedCategory:"",languages:[]})
+        res.render("user/main",{products,categories,selectedCategory:"",languages:[],user})
 }
 
 const productDetails=async(req,res)=>{
         const {productId}=req.params
+        const accesstoken=req.cookies.accessTokenUser
+        if(!accesstoken){
+                return res.redirect("/users/login")
+        }
+        const user=jwt.verify(accesstoken,process.env.ACCESS_TOKEN_SECRET)
         const product=await Product.findById(productId).populate('category')
-        res.render("product/productdetail",{product});
+        res.render("product/productdetail",{product,user});
 }
 
 const productFilter=async(req,res)=>{
@@ -213,9 +224,14 @@ const productFilter=async(req,res)=>{
         }
         const products=await pdctQuery.exec()
         const categories=await Category.find();
+        const accesstoken=req.cookies.accessTokenUser
+        if(!accesstoken){
+                return res.redirect("/users/login")
+        }
+        const user=jwt.verify(accesstoken,process.env.ACCESS_TOKEN_SECRET)
 
         const languages = [...new Set(products.map(product => product.language))];
-        res.render("user/main",{categories,products,languages,selectedCategory:category || "",selectedLanguage:language || "",selectedPriceOrder:price || ""})
+        res.render("user/main",{user,categories,products,languages,selectedCategory:category || "",selectedLanguage:language || "",selectedPriceOrder:price || ""})
 }
 
-module.exports={registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,listProducts,productDetails,productFilter}
+module.exports={registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,logoutUser,listProducts,productDetails,productFilter}
