@@ -5,6 +5,7 @@ const jwt=require("jsonwebtoken")
 const verifyUser=require("../middleware/userAuth.middleware.js")
 const router=express.Router()
 
+const {getCart,addToCart,updateCart}=require("../controller/cart.controller.js")
 
 
 router.all('/register',(req,res)=>{
@@ -24,13 +25,12 @@ router.route('/login')
     }
 
     try {
-        const decoded = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET);
-        const userId = decoded._id;
+        const decoded = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET)
         if(decoded.isBlocked==true){
             res.clearCookie('accessTokenUser')
             return res.send("Your Account is blocked")
         }
-        res.redirect(`/users/main/${userId}`);
+        res.redirect(`/users/main`);
     }catch (err) {
         console.error("Token verification failed:", err.message);
         res.clearCookie('accessTokenUser');
@@ -54,7 +54,7 @@ router.route('/verify-otp')
         const email = req.cookies.emailResetPassword;
         res.render('user/verifyOtppage', { error: "", Email: email || "" });
     })
-    .post(verifyUser,(req, res) => {
+    .post((req, res) => {
         verifyOtp(req, res);
     });
 
@@ -67,7 +67,7 @@ router.route('/set-new-password')
         setNewPassword(req, res);
     });
 
-router.route('/main/:userId')
+router.route('/main')
 .get(verifyUser,(req,res)=>{
     listProducts(req,res)
 })
@@ -84,6 +84,19 @@ router.route('/product')
 router.route("/logout")
 .post(verifyUser,(req,res)=>{
     logoutUser(req,res)
+})
+
+
+//cart
+
+router.route("/cart")
+.get((req,res)=>{
+    getCart(req,res)
+})
+
+router.route("/cart/:productId")
+.post((req,res)=>{
+    addToCart(req,res)
 })
 
 module.exports=router

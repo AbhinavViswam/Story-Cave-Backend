@@ -3,9 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CART</title>
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="/styles/cart.css"> <!-- Link your CSS file here -->
 </head>
 <body>
-    CART
+    <div class="container">
+        <h1>Your Shopping Cart</h1>
+
+        <% if (cart && cart.items.length > 0) { %>
+            <form>
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Subtotal</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% cart.items.forEach(item => { %>
+                            <tr>
+                                <td><%= item.productid.name %></td> <!-- Assuming productid has a 'name' field -->
+                                <td>
+                                    <input 
+                                        type="number" 
+                                        name="quantities[<%= item.productid._id %>]" 
+                                        value="<%= item.quantity %>" 
+                                        min="1" 
+                                        class="quantity-input">
+                                </td>
+                                <td>$<%= item.productid.offerprice %></td> <!-- Assuming productid has an 'offerprice' field -->
+                                <td>$<%= item.productid.offerprice * item.quantity %></td>
+                                <td>
+                                    <form>
+                                        <button type="submit" class="btn-remove">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+
+                <div class="cart-total">
+                    <h3>Total Price: $<%= cart.totalprice %></h3>
+                </div>
+
+                <div class="cart-actions">
+                    <button type="submit" class="btn-update">Update Cart</button>
+                    <a href="/users/main" class="btn">Continue Shopping</a>
+                </div>
+            </form>
+        <% } else { %>
+            <p>Your cart is empty.</p>
+        <% } %>
+    </div>
 </body>
 </html>

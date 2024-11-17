@@ -106,7 +106,7 @@ const loginUser=async function(req,res){
          }
          else{
                 res.status(200).cookie('accessTokenUser',accessToken)
-                res.redirect(`/users/main/${user._id}`)
+                res.redirect(`/users/main`)
          }
 }
 const forgotPassword=async function(req,res){
@@ -183,26 +183,16 @@ const logoutUser=async(req,res)=>{
 const listProducts=async(req,res)=>{
         const products=await Products.find({isBlocked:false});
         const categories=await Category.find();
-        const accesstoken=req.cookies.accessTokenUser
-        if(!accesstoken){
-                return res.redirect("/users/login")
-        }
-        const user=jwt.verify(accesstoken,process.env.ACCESS_TOKEN_SECRET)
         if(!products){
                 return res.render({error:"No products available"})
         }
-        res.render("user/main",{products,categories,selectedCategory:"",languages:[],user})
+        res.render("user/main",{products,categories,selectedCategory:"",languages:[]})
 }
 
 const productDetails=async(req,res)=>{
         const {productId}=req.params
-        const accesstoken=req.cookies.accessTokenUser
-        if(!accesstoken){
-                return res.redirect("/users/login")
-        }
-        const user=jwt.verify(accesstoken,process.env.ACCESS_TOKEN_SECRET)
         const product=await Product.findById(productId).populate('category')
-        res.render("product/productdetail",{product,user});
+        res.render("product/productdetail",{product});
 }
 
 const productFilter=async(req,res)=>{
@@ -224,14 +214,8 @@ const productFilter=async(req,res)=>{
         }
         const products=await pdctQuery.exec()
         const categories=await Category.find();
-        const accesstoken=req.cookies.accessTokenUser
-        if(!accesstoken){
-                return res.redirect("/users/login")
-        }
-        const user=jwt.verify(accesstoken,process.env.ACCESS_TOKEN_SECRET)
-
         const languages = [...new Set(products.map(product => product.language))];
-        res.render("user/main",{user,categories,products,languages,selectedCategory:category || "",selectedLanguage:language || "",selectedPriceOrder:price || ""})
+        res.render("user/main",{categories,products,languages,selectedCategory:category || "",selectedLanguage:language || "",selectedPriceOrder:price || ""})
 }
 
 module.exports={registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,logoutUser,listProducts,productDetails,productFilter}

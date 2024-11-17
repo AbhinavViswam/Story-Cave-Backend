@@ -59,68 +59,85 @@ const getProductDetails = async (req, res) => {
 };
 
 const updateProduct=async(req,res)=>{
-    const {id}=req.params;
-    const{name,description,price,stock,category,language,offerprice,author}=req.body
-    const image=req.file ? req.file.path.replace(/\\/g, "/") : "";
-    const product = await Product.findById(id);
-    if (!product) {
-            return res.status(404).json({ message: "Product not found",name,description,price,language,offerprice,author,stock,category,message:"",error:""});
+    try {
+        const {id}=req.params;
+        const{name,description,price,stock,category,language,offerprice,author}=req.body
+        const image=req.file ? req.file.path.replace(/\\/g, "/") : "";
+        const product = await Product.findById(id);
+        if (!product) {
+                return res.status(404).json({ message: "Product not found",name,description,price,language,offerprice,author,stock,category,message:"",error:""});
+            }
+        if(!name || !description || !price || !stock || !category || !author || !offerprice || !language){
+            return res.status(400).json({message:"all fields are required",name,description,price,language,offerprice,author,stock,category,message:"",error:""})
         }
-    if(!name || !description || !price || !stock || !category || !author || !offerprice || !language){
-        return res.status(400).json({message:"all fields are required",name,description,price,language,offerprice,author,stock,category,message:"",error:""})
+    
+        const updateData=await Product.findByIdAndUpdate(
+            id,
+            {
+                name,
+                description,
+                price,
+                language,
+                offerprice,
+                author,
+                stock,
+                category,
+                image: image ? '/productImages/' + image.split('/').pop() : ''
+            },
+            {new:true}
+        )
+        if(!updateData){
+            res.status(404).redirect('/admin/view-product')
+        }
+        res.status(200).redirect("/admin/view-product")
+    } catch (error) {
+        console.log("error occured during updating");
+        res.send("Cannot update product")
     }
-
-    const updateData=await Product.findByIdAndUpdate(
-        id,
-        {
-            name,
-            description,
-            price,
-            language,
-            offerprice,
-            author,
-            stock,
-            category,
-            image: image ? '/productImages/' + image.split('/').pop() : ''
-        },
-        {new:true}
-    )
-    if(!updateData){
-        res.status(404).redirect('/admin/view-product')
-    }
-    res.status(200).redirect("/admin/view-product")
     
 }
 
 const deleteProduct = async (req, res) => {
-    const { id } = req.params;
-        const product = await Product.findById(id).populate('category');
-        if (!product) {
-            return res.status(404).json({ error: "Product not found" });
-        }
-        res.status(200).render("admin/deleteproduct",{pdct_id:id,product:product})
+    try {
+        const { id } = req.params;
+            const product = await Product.findById(id).populate('category');
+            if (!product) {
+                return res.status(404).json({ error: "Product not found" });
+            }
+            res.status(200).render("admin/deleteproduct",{pdct_id:id,product:product})
+    } catch (error) {
+        res.send("cannot delete now")
+    }
 };
 
 const deleteProductConfirmation=async(req,res)=>{
-    const { id } = req.params;
-    const product=await Product.findByIdAndDelete(id)
-    if (!product) {
-        return res.status(404).json({ error: "Product not found" });
+    try {
+        const { id } = req.params;
+        const product=await Product.findByIdAndDelete(id)
+        if (!product) {
+            return res.status(404).json({ error: "Product not found" });
+        }
+        res.status(200).redirect("/admin/view-product");
+    } catch (error) {
+        res.send("Cannot delete")
     }
-    res.status(200).redirect("/admin/view-product");
 }
 
 const blockUnblockProduct=async(req,res)=>{
-    const {id}=req.params;
-    const product=await Product.findById(id)
-    if (!product) {
-        return res.status(404).json({ error: "Product not found" });
-    }
-    product.isBlocked=!product.isBlocked;
-
-    await product.save()
-    
-    res.status(200).redirect("/admin/view-product");  
+   try {
+     const {id}=req.params;
+     const product=await Product.findById(id)
+     if (!product) {
+         return res.status(404).json({ error: "Product not found" });
+     }
+     product.isBlocked=!product.isBlocked;
+ 
+     await product.save()
+     
+     res.status(200).redirect("/admin/view-product"); 
+   } catch (error) {
+    res.send("unable to block")
+   } 
 }
 
 module.exports={addProduct,updateProduct,viewProduct,getProductDetails,deleteProduct,deleteProductConfirmation,blockUnblockProduct}

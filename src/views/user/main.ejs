@@ -171,7 +171,10 @@
   <div class="navbar">
     <h2>STORY CAVE</h2>
     <div class="user-info">
-      <span><%= user.fullName %></span>
+      <span>hello</span>
+    </div>
+    <div>
+      <a href="/users/cart">Cart</a>
     </div>
     <!-- Hamburger icon for sidebar toggle -->
     <div class="hamburger" onclick="toggleSidebar()">☰</div>
@@ -188,7 +191,6 @@
           <option value="<%= category._id %>" <%= selectedCategory == category._id ? 'selected' : '' %>><%= category.name %></option>
         <% }) %>
       </select>
-
       <label for="language-select">Language:</label>
       <select id="language-select" name="language">
         <option value="">All Languages</option>

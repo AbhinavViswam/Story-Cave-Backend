@@ -100,7 +100,12 @@
                 <% } %>
             </div>
         </div>
-        <a href="/users/main/<%=user._id%>">All Products</a>
+        <div>
+            <form action="/users/cart/<%= product._id %>" method="post">
+                <button>Add To Cart</button>
+            </form>
+        </div>
+        <a href="/users/main">All Products</a>
     </div>
 </body>
 </html>
