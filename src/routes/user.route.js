@@ -1,11 +1,12 @@
 const {registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,logoutUser,listProducts,productDetails,productFilter}=require('../controller/user.controller.js')
 const {checkEmailSet,checkOtpSet}=require('../middleware/ForgotPasswordAuth.middleware.js');
+const {getWishlist,addToWishlist,removeFromWishlist}=require("../controller/wishlist.controller.js")
 const express=require('express')
 const jwt=require("jsonwebtoken")
 const verifyUser=require("../middleware/userAuth.middleware.js")
 const router=express.Router()
 
-const {getCart,addToCart,updateCart}=require("../controller/cart.controller.js")
+const {getCart,addToCart,removeFromCart,updateCart}=require("../controller/cart.controller.js")
 
 
 router.all('/register',(req,res)=>{
@@ -97,6 +98,33 @@ router.route("/cart")
 router.route("/cart/:productId")
 .post((req,res)=>{
     addToCart(req,res)
+})
+
+router.route("/cart/remove/:productId")
+.post((req,res)=>{
+    removeFromCart(req,res);
+})
+
+router.route("/cart/update/:productId")
+.post((req,res)=>{
+    updateCart(req,res);
+})
+
+//wishlist
+
+router.route("/wishlist")
+.get((req,res)=>{
+    getWishlist(req,res)
+})
+
+router.route("/wishlist/:productId")
+.post((req,res)=>{
+    addToWishlist(req,res);
+})
+
+router.route("/wishlist/remove/:productId")
+.post((req,res)=>{
+    removeFromWishlist(req,res);
 })
 
 module.exports=router

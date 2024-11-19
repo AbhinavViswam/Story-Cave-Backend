@@ -134,7 +134,7 @@ const blockUnblockProduct=async(req,res)=>{
  
      await product.save()
      
-     res.status(200).redirect("/admin/view-product"); 
+     res.status(200).redirect("/admin/view-product");
    } catch (error) {
     res.send("unable to block")
    } 

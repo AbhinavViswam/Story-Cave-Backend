@@ -15,6 +15,7 @@ async function generateAccessToken(userId){
                console.log("Something went wrong");
         }
 }
+ 
 const registerUser = async function(req, res) {
         try {
             const { fullName, password, email } = req.body; 
@@ -181,12 +182,19 @@ const logoutUser=async(req,res)=>{
 // products
 
 const listProducts=async(req,res)=>{
+        const userToken = req.cookies.accessTokenUser; 
+
+        if (!userToken) {
+            return res.status(401).json({ error: "Token expired" });
+        }
+    
+        const decoded = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET);
         const products=await Products.find({isBlocked:false});
         const categories=await Category.find();
         if(!products){
                 return res.render({error:"No products available"})
         }
-        res.render("user/main",{products,categories,selectedCategory:"",languages:[]})
+        res.render("user/main",{decoded,products,categories,selectedCategory:"",languages:[]})
 }
 
 const productDetails=async(req,res)=>{
@@ -196,6 +204,13 @@ const productDetails=async(req,res)=>{
 }
 
 const productFilter=async(req,res)=>{
+        const userToken = req.cookies.accessTokenUser; 
+
+        if (!userToken) {
+            return res.status(401).json({ error: "Token expired" });
+        }
+    
+        const decoded = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET);
         const {category}=req.query;
         const {language}=req.query;
         const {price}=req.query;
@@ -215,7 +230,7 @@ const productFilter=async(req,res)=>{
         const products=await pdctQuery.exec()
         const categories=await Category.find();
         const languages = [...new Set(products.map(product => product.language))];
-        res.render("user/main",{categories,products,languages,selectedCategory:category || "",selectedLanguage:language || "",selectedPriceOrder:price || ""})
+        res.render("user/main",{decoded,categories,products,languages,selectedCategory:category || "",selectedLanguage:language || "",selectedPriceOrder:price || ""})
 }
 
 module.exports={registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,logoutUser,listProducts,productDetails,productFilter}

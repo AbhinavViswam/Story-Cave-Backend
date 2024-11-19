@@ -102,7 +102,13 @@
         </div>
         <div>
             <form action="/users/cart/<%= product._id %>" method="post">
+                <input type="number" name="inputQuantity" min="1" value="1">
                 <button>Add To Cart</button>
+            </form>
+        </div>
+        <div>
+            <form action="/users/wishlist/<%= product._id %>" method="post">
+                <button>Add To wishlist</button>
             </form>
         </div>
         <a href="/users/main">All Products</a>

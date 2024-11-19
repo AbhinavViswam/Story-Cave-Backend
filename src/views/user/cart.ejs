@@ -4,60 +4,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
-    <link rel="stylesheet" href="/styles/cart.css"> <!-- Link your CSS file here -->
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f6f5f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+        }
+
+        h1 {
+            margin-top: 40px;
+            font-weight: 700;
+            color: #333;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        th {
+            background-color: #003366;
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        td {
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .quantity-input {
+            width: 50px;
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .cart-table button {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .cart-table button:hover {
+            background-color: #c12d2f;
+        }
+
+        .cart-table input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            text-align: center;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .empty-cart-message {
+            font-size: 18px;
+            color: #555;
+            text-align: center;
+        }
+
+        .cart-footer {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        a {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: #0056b3;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 700;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #003366;
+        }
+
+        @media (max-width: 768px) {
+            .cart-table {
+                font-size: 14px;
+            }
+
+            .quantity-input {
+                width: 40px;
+            }
+
+            a {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Your Shopping Cart</h1>
 
         <% if (cart && cart.items.length > 0) { %>
-            <form>
-                <table class="cart-table">
-                    <thead>
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Subtotal</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% cart.items.forEach(item => { %>
                         <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Subtotal</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% cart.items.forEach(item => { %>
-                            <tr>
-                                <td><%= item.productid.name %></td> <!-- Assuming productid has a 'name' field -->
-                                <td>
+                            <td><img src="<%= item.productid.image %>" height="150px" width="100px"></td>
+                            <td><%= item.productid.name %></td>
+                            <td>
+                                <form action="/users/cart/update/<%= item.productid._id %>" method="POST">
                                     <input 
                                         type="number" 
-                                        name="quantities[<%= item.productid._id %>]" 
+                                        name="quantities" 
                                         value="<%= item.quantity %>" 
                                         min="1" 
                                         class="quantity-input">
-                                </td>
-                                <td>$<%= item.productid.offerprice %></td> <!-- Assuming productid has an 'offerprice' field -->
-                                <td>$<%= item.productid.offerprice * item.quantity %></td>
-                                <td>
-                                    <form>
-                                        <button type="submit" class="btn-remove">Remove</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-
-                <div class="cart-total">
-                    <h3>Total Price: $<%= cart.totalprice %></h3>
-                </div>
-
-                <div class="cart-actions">
-                    <button type="submit" class="btn-update">Update Cart</button>
-                    <a href="/users/main" class="btn">Continue Shopping</a>
-                </div>
-            </form>
+                                    <button type="submit">Update</button>
+                                </form>
+                            </td>
+                            
+                            <td>$<%= item.productid.offerprice %></td>
+                            <td>$<%= item.productid.offerprice * item.quantity %></td>
+                            <td>
+                                <form action="/users/cart/remove/<%= item.productid._id  %>" method="post">
+                                    <button type="submit">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
         <% } else { %>
-            <p>Your cart is empty.</p>
+            <p class="empty-cart-message">Your cart is empty.</p>
         <% } %>
+    </div>
+
+    <div class="cart-footer">
+        <a href="/users/main">Go back</a>
     </div>
 </body>
 </html>

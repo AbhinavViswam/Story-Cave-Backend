@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Wishlist</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f6f5f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+        }
+
+        h1 {
+            margin-top: 40px;
+            font-weight: 700;
+            color: #333;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .wishlist-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        th {
+            background-color: #003366;
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        td {
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .wishlist-table button {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .wishlist-table button:hover {
+            background-color: #c12d2f;
+        }
+
+        .empty-wishlist-message {
+            font-size: 18px;
+            color: #555;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .wishlist-footer {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        a {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: #0056b3;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 700;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #003366;
+        }
+
+        @media (max-width: 768px) {
+            .wishlist-table {
+                font-size: 14px;
+            }
+
+            a {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Your Wishlist</h1>
+        </header>
+
+        <main>
+            <% if (wishlist && wishlist.productid.length > 0) { %>
+                <table class="wishlist-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Product Name</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% wishlist.productid.forEach(product => { %>
+                            <tr>
+                                <td><img src="<%= product.image %>" height="150px" width="100px"></td>
+                                <td><%= product.name %></td>
+                                <td>$<%= product.offerprice %></td>
+                                <td>
+                                    <form action="/users/wishlist/remove/<%= product._id %>" method="POST">
+                                        <button type="submit">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p class="empty-wishlist-message">Your wishlist is empty. Start adding products!</p>
+            <% } %>
+        </main>
+        <div class="wishlist-footer">
+            <a href="/users/main">Go Back</a>
+        </div>
+    </div>
+</body>
+</html>
