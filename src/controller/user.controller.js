@@ -5,6 +5,7 @@ const bcrypt=require("bcrypt")
 const genOTP=require("../middleware/OTP.middleware.js")
 const Product = require('../models/products.models.js')
 const jwt=require("jsonwebtoken")
+const Cart = require('../models/cart.models.js')
 
 async function generateAccessToken(userId){
         try {
@@ -183,11 +184,9 @@ const logoutUser=async(req,res)=>{
 
 const listProducts=async(req,res)=>{
         const userToken = req.cookies.accessTokenUser; 
-
         if (!userToken) {
             return res.status(401).json({ error: "Token expired" });
         }
-    
         const decoded = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET);
         const products=await Products.find({isBlocked:false});
         const categories=await Category.find();
@@ -227,10 +226,11 @@ const productFilter=async(req,res)=>{
         if(price=="des"){
                 pdctQuery=pdctQuery.sort({offerprice:-1});
         }
+           const cart=await Cart.findOne({userid:decoded._id}).populate('items.productid')
         const products=await pdctQuery.exec()
         const categories=await Category.find();
         const languages = [...new Set(products.map(product => product.language))];
-        res.render("user/main",{decoded,categories,products,languages,selectedCategory:category || "",selectedLanguage:language || "",selectedPriceOrder:price || ""})
+        res.render("user/main",{decoded,cart,categories,products,languages,selectedCategory:category || "",selectedLanguage:language || "",selectedPriceOrder:price || ""})
 }
 
 module.exports={registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,logoutUser,listProducts,productDetails,productFilter}

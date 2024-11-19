@@ -1,117 +1,173 @@
-<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details</title>
-    <link rel="stylesheet" href="/styles.css"> <!-- Link to your main CSS file -->
-    <style>
-        /* Inline CSS for quick customization */
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #f6f5f7;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            color: #333;
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Product Details
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+            font-family: 'Roboto', sans-serif;
         }
-
-        .product-container {
-            background-color: #fff;
-            width: 90%;
-            max-width: 500px;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .product-image img {
-            height: 250px;
-            width: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .product-details {
-            margin-top: 20px;
-        }
-
-        .product-details h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .product-details p {
-            margin: 5px 0;
-        }
-
-        .price {
-            font-size: 20px;
-            font-weight: bold;
-            color: #27ae60;
-            margin: 10px 0;
-        }
-
-        .original-price {
-            text-decoration: line-through;
-            color: #888;
-            font-size: 16px;
-        }
-
-        .offer-price {
-            color: #e74c3c;
-            font-size: 20px;
-        }
-
-        .product-meta {
-            font-size: 14px;
-            color: #666;
-        }
-    </style>
-</head>
-<body>
-    <div class="product-container">
-        <!-- Product Image -->
-        <div class="product-image">
-            <img src="<%= product.image %>" alt="<%= product.name %> image">
-        </div>
-        
-        <!-- Product Details -->
-        <div class="product-details">
-            <h1><%= product.name %></h1>
-            <p><%= product.description %></p>
-            
-            <!-- Meta information -->
-            <p class="product-meta">Author: <%= product.author %></p>
-            <p class="product-meta">Language: <%= product.language %></p>
-            <p class="product-meta">Category: <%= product.category.name %></p>
-            
-            <!-- Pricing -->
-            <div class="price-section">
-                <% if (product.offerprice < product.price) { %>
-                    <p class="original-price">$<%= product.price.toFixed(2) %></p>
-                    <p class="offer-price">$<%= product.offerprice.toFixed(2) %></p>
-                <% } else { %>
-                    <p class="price">$<%= product.price.toFixed(2) %></p>
-                <% } %>
-            </div>
-        </div>
-        <div>
-            <form action="/users/cart/<%= product._id %>" method="post">
-                <input type="number" name="inputQuantity" min="1" value="1">
-                <button>Add To Cart</button>
-            </form>
-        </div>
-        <div>
-            <form action="/users/wishlist/<%= product._id %>" method="post">
-                <button>Add To wishlist</button>
-            </form>
-        </div>
-        <a href="/users/main">All Products</a>
+    .imge{
+        height: 60vh;
+        width:20vw;
+    }
+  </style>
+ </head>
+ <body class="bg-gray-100">
+  <main class="container mx-auto px-4 py-8">
+   <a class="text-blue-600 hover:underline" href="/users/main">
+    &larr; Go Back
+   </a>
+   <div class="bg-white p-6 rounded-lg shadow-lg mt-4">
+    <div class="flex flex-col md:flex-row">
+     <div class="md:w-1/2">
+      <img alt="Placeholder image of the product showing its front view" class="imge" src="<%= product.image %>"/>
+      <div class="flex space-x-2 mt-4">
+      </div>
+     </div>
+     <div class="md:w-1/2 md:pl-8 mt-6 md:mt-0">
+      <h1 class="text-3xl font-bold text-gray-800">
+      <%= product.name %>
+      </h1>
+      <p class="text-gray-600 mt-2">
+        Author:
+       <span class="font-medium">
+        <%= product.author %>
+       </span>
+      </p>
+      <p class="text-gray-600 mt-2">
+        Language:
+       <span class="font-medium">
+        <%= product.language %>
+       </span>
+      </p>
+      <p class="text-gray-600 mt-2">
+       Category:
+       <span class="font-medium">
+        <%= product.category.name %>
+       </span>
+      </p>
+      <div class="flex items-center mt-4">
+       <div class="text-yellow-500">
+        <i class="fas fa-star">
+        </i>
+        <i class="fas fa-star">
+        </i>
+        <i class="fas fa-star">
+        </i>
+        <i class="fas fa-star">
+        </i>
+        <i class="fas fa-star-half-alt">
+        </i>
+       </div>
+       <span class="text-gray-600 ml-2">
+        (150 reviews)
+       </span>
+      </div>
+      <p class="text-2xl font-bold text-gray-800 mt-4">
+       $<%= product.offerprice  %>
+      </p>
+      <p class="text-gray-600 mt-4">
+       <%= product.description  %>
+      </p>
+      <div class="mt-6">
+        <form action="/users/cart/<%= product._id %>" method="post">
+       <label class="block text-gray-600" for="quantity">
+        Quantity
+       </label>
+       <input class="w-20 mt-2 p-2 border rounded-lg" id="quantity" min="1" name="inputQuantity" type="number" value="1"/>
+      </div>
+      <div class="mt-6 flex space-x-4">
+       <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+        Add to Cart
+       </button>
+    </form>
+       <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+        Buy Now
+       </button>
+      </div>
+     </div>
     </div>
-</body>
+   </div>
+   <div class="bg-white p-6 rounded-lg shadow-lg mt-8">
+    <h2 class="text-2xl font-bold text-gray-800">
+     Customer Reviews
+    </h2>
+    <div class="mt-4">
+     <div class="border-b pb-4 mb-4">
+      <div class="flex items-center">
+       <div class="text-yellow-500">
+        <i class="fas fa-star">
+        </i>
+        <i class="fas fa-star">
+        </i>
+        <i class="fas fa-star">
+        </i>
+        <i class="fas fa-star">
+        </i>
+        <i class="fas fa-star-half-alt">
+        </i>
+       </div>
+       <span class="text-gray-600 ml-2">
+        by John Doe
+       </span>
+      </div>
+      <p class="text-gray-600 mt-2">
+       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
+      </p>
+     </div>
+     <div class="border-b pb-4 mb-4">
+      <div class="flex items-center">
+       <div class="text-yellow-500">
+        <i class="fas fa-star">
+        </i>
+        <i class="fas fa-star">
+        </i>
+        <i class="fas fa-star">
+        </i>
+        <i class="fas fa-star">
+        </i>
+       </div>
+       <span class="text-gray-600 ml-2">
+        by Jane Smith
+       </span>
+      </div>
+      <p class="text-gray-600 mt-2">
+       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
+      </p>
+     </div>
+     <div class="border-b pb-4 mb-4">
+      <div class="flex items-center">
+       <div class="text-yellow-500">
+        <i class="fas fa-star">
+        </i>
+        <i class="fas fa-star">
+        </i>
+        <i class="fas fa-star">
+        </i>
+        <i class="fas fa-star">
+        </i>
+        <i class="fas fa-star-half-alt">
+        </i>
+       </div>
+       <span class="text-gray-600 ml-2">
+        by Alice Johnson
+       </span>
+      </div>
+      <p class="text-gray-600 mt-2">
+       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
+      </p>
+     </div>
+    </div>
+   </div>
+  </main>
+  <footer class="bg-white shadow mt-8">
+  </footer>
+ </body>
 </html>
