@@ -188,12 +188,20 @@ const listProducts=async(req,res)=>{
             return res.status(401).json({ error: "Token expired" });
         }
         const decoded = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET);
+        const cart=await Cart.findOne({userid:decoded._id}).populate('items.productid')
+        let len;
+        if(!cart){
+                len=0;
+        }
+        else{
+                len=cart.items.length;
+        }
         const products=await Products.find({isBlocked:false});
         const categories=await Category.find();
         if(!products){
                 return res.render({error:"No products available"})
         }
-        res.render("user/main",{decoded,products,categories,selectedCategory:"",languages:[]})
+        res.render("user/main",{len,decoded,products,categories,selectedCategory:"",languages:[]})
 }
 
 const productDetails=async(req,res)=>{
@@ -226,11 +234,18 @@ const productFilter=async(req,res)=>{
         if(price=="des"){
                 pdctQuery=pdctQuery.sort({offerprice:-1});
         }
-           const cart=await Cart.findOne({userid:decoded._id}).populate('items.productid')
+        const cart=await Cart.findOne({userid:decoded._id}).populate('items.productid')
+        let len;
+        if(!cart){
+                len=0;
+        }
+        else{
+                len=cart.items.length;
+        }
         const products=await pdctQuery.exec()
         const categories=await Category.find();
         const languages = [...new Set(products.map(product => product.language))];
-        res.render("user/main",{decoded,cart,categories,products,languages,selectedCategory:category || "",selectedLanguage:language || "",selectedPriceOrder:price || ""})
+        res.render("user/main",{len,decoded,cart,categories,products,languages,selectedCategory:category || "",selectedLanguage:language || "",selectedPriceOrder:price || ""})
 }
 
 module.exports={registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,logoutUser,listProducts,productDetails,productFilter}
