@@ -155,7 +155,7 @@
                 <tbody>
                     <% cart.items.forEach(item => { %>
                         <tr>
-                            <td><img src="<%= item.productid.image %>" height="150px" width="100px"></td>
+                            <td><a href="/users/product/<%= item.productid._id %>/details"><img src="<%= item.productid.image %>" height="150px" width="100px"></a></td>
                             <td><%= item.productid.name %></td>
                             <td>
                                 <form action="/users/cart/update/<%= item.productid._id %>" method="POST">

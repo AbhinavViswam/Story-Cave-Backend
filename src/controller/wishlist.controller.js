@@ -30,14 +30,10 @@ const addToWishlist=async(req,res)=>{
     }
     if (!wishlist.productid.includes(productId)) {
         wishlist.productid.push(productId);
-    } else {
-        return res.redirect("/users/wishlist")
     }
-
     await wishlist.save();
-    res.redirect(`/users/product/${productId}/details`)
+    res.redirect('/users/main')
 }
-
 
 removeFromWishlist=async(req,res)=>{
     const {productId}=req.params

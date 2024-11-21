@@ -136,10 +136,14 @@
                     <tbody>
                         <% wishlist.productid.forEach(product => { %>
                             <tr>
-                                <td><img src="<%= product.image %>" height="150px" width="100px"></td>
+                                <td><a href="/users/product/<%= product._id %>/details"><img src="<%= product.image %>" height="150px" width="100px"></a></td>
                                 <td><%= product.name %></td>
                                 <td>$<%= product.offerprice %></td>
                                 <td>
+                                    <form action="/users/cart/<%= product._id %>" method="POST">
+                                        <input type="Number" name="inputQuantity" value="1" style="display: none;">
+                                        <button type="submit">Add to cart</button>
+                                    </form>
                                     <form action="/users/wishlist/remove/<%= product._id %>" method="POST">
                                         <button type="submit">Remove</button>
                                     </form>

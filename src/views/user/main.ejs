@@ -19,6 +19,9 @@
         .book-card:hover .add-to-cart {
             display: block;
         }
+        .book-card:hover .wishlist-button {
+            display: block;
+        }
         .add-to-cart {
             display: none;
             position: absolute;
@@ -38,6 +41,21 @@
         }
         .book-card:hover {
             transform: scale(1.05);
+        }
+        .wishlist-button {
+            display: none;
+            position: absolute;
+            bottom: 40px;
+            right: 10px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 2rem;
+            color: black;
+            transition: transform 0.3s ease;
+        }
+        .wishlist-button:hover {
+            transform: scale(1.3);
         }
         .fade-enter-active, .fade-leave-active {
             transition: opacity 0.5s;
@@ -231,7 +249,7 @@
                <a class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" href="/users/wishlist">
                 <i class="fas fa-heart mr-2">
                 </i>
-                Wishlist
+                Wishlist(<%= wlen %>)
                </a>
               </li>
               
@@ -312,6 +330,12 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           <% products.forEach(product => { %>
          <div class="text-center book-card">
+            <form action="/users/wishlist/<%= product._id %>" method="post">
+            <button class="wishlist-button">
+                <i class="fas fa-heart">
+                </i>
+               </button>
+               </form>
           <a href="/users/product/<%= product._id %>/details">
           <img alt="Book cover of 'Simple Way Of Piece Life'" class="mx-auto mb-4" height="300" src="<%= product.image %>" width="200"/></a>
           <form action="/users/cart/<%= product._id %>" method="post">

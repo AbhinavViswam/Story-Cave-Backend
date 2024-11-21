@@ -1,6 +1,7 @@
 const User= require('../models/user.models.js')
 const Products=require("../models/products.models.js")
 const Category=require("../models/category.models.js")
+const Wishlist=require("../models/wishlist.models.js")
 const bcrypt=require("bcrypt")
 const genOTP=require("../middleware/OTP.middleware.js")
 const Product = require('../models/products.models.js')
@@ -189,6 +190,8 @@ const listProducts=async(req,res)=>{
         }
         const decoded = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET);
         const cart=await Cart.findOne({userid:decoded._id}).populate('items.productid')
+        const wishlist=await Wishlist.findOne({ userid:decoded._id })
+        let wlen;
         let len;
         if(!cart){
                 len=0;
@@ -196,12 +199,18 @@ const listProducts=async(req,res)=>{
         else{
                 len=cart.items.length;
         }
+        if(!wishlist){
+                wlen=0;
+        }
+        else{
+                wlen=wishlist.productid.length;
+        }
         const products=await Products.find({isBlocked:false});
         const categories=await Category.find();
         if(!products){
                 return res.render({error:"No products available"})
         }
-        res.render("user/main",{len,decoded,products,categories,selectedCategory:"",languages:[]})
+        res.render("user/main",{wlen,len,decoded,products,categories,selectedCategory:"",languages:[]})
 }
 
 const productDetails=async(req,res)=>{
@@ -235,6 +244,8 @@ const productFilter=async(req,res)=>{
                 pdctQuery=pdctQuery.sort({offerprice:-1});
         }
         const cart=await Cart.findOne({userid:decoded._id}).populate('items.productid')
+        const wishlist=await Wishlist.findOne({ userid:decoded._id })
+        let wlen;
         let len;
         if(!cart){
                 len=0;
@@ -242,10 +253,16 @@ const productFilter=async(req,res)=>{
         else{
                 len=cart.items.length;
         }
+        if(!wishlist){
+                wlen=0;
+        }
+        else{
+                wlen=wishlist.productid.length;
+        }
         const products=await pdctQuery.exec()
         const categories=await Category.find();
         const languages = [...new Set(products.map(product => product.language))];
-        res.render("user/main",{len,decoded,cart,categories,products,languages,selectedCategory:category || "",selectedLanguage:language || "",selectedPriceOrder:price || ""})
+        res.render("user/main",{wlen,len,decoded,cart,categories,products,languages,selectedCategory:category || "",selectedLanguage:language || "",selectedPriceOrder:price || ""})
 }
 
 module.exports={registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,logoutUser,listProducts,productDetails,productFilter}
