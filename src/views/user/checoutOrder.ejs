@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Order</title>
+</head>
+<body>
+    <h2>Checkout Order</h2>
+
+    <!-- Cart Items Section -->
+    <h3>Your Cart Items:</h3>
+    <% if (cartItems.length > 0) { %>
+        <table border="1" cellpadding="5" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Offer Price</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% cartItems.forEach(item => { %>
+                    <tr>
+                        <td>
+                            <% if (item.productid.image && item.productid.image.length > 0) { %>
+                                <img src="<%= item.productid.image[0] %>" alt="<%= item.productid.name %>" width="100">
+                            <% } else { %>
+                                No Image
+                            <% } %>
+                        </td>
+                        <td><%= item.productid.name %></td>
+                        <td>
+                            <% if (item.productid.offerprice) { %>
+                                $<%= item.productid.offerprice.toFixed(2) %>
+                            <% } else { %>
+                                - 
+                            <% } %>
+                        </td>
+                        <td><%= item.quantity %></td>
+                        <td>
+                            $<%= (item.quantity * (item.productid.offerprice)).toFixed(2) %>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        Total Amount:<h3>$<%= cartItems.reduce((sum, item) => sum + (item.quantity * (item.productid.offerprice)), 0).toFixed(2) %></h3>
+    <% } else { %>
+        <p>Your cart is empty.</p>
+    <% } %>
+
+    <hr>
+
+    <!-- Address Selection Section -->
+    <h3>Select a Shipping Address:</h3>
+    <form action="/users/order/checkout" method="POST">
+        <% if (address.length > 0) { %>
+            <% address.forEach((addr, index) => { %>
+                <div>
+                    <input 
+                        type="radio" 
+                        id="address<%= index %>" 
+                        name="selectedAddress" 
+                        value='<%= JSON.stringify(addr) %>' 
+                        <%= index === 0 ? 'checked' : '' %>
+                    >
+                    <label for="address<%= index %>">
+                        <strong>Address <%= index + 1 %>:</strong><br>
+                        City: <%= addr.city %><br>
+                        Place: <%= addr.place %><br>
+                        District: <%= addr.district %><br>
+                        Pincode: <%= addr.pincode %>
+                    </label>
+                </div>
+                <hr>
+            <% }) %>
+        <% } else { %>
+            <p>No addresses found. Please add an address to proceed.</p>
+        <% } %>
+    
+        <!-- Payment Method Selection -->
+        <h3>Select Payment Method:</h3>
+        <div>
+            <input type="radio" id="paymentCard" name="paymentMethod" value="card" checked>
+            <label for="paymentCard">Credit/Debit Card</label>
+        </div>
+        <div>
+            <input type="radio" id="paymentCOD" name="paymentMethod" value="cash-on-delivery">
+            <label for="paymentCOD">Cash on Delivery</label>
+        </div>
+        <div>
+            <input type="radio" id="paymentUPI" name="paymentMethod" value="upi">
+            <label for="paymentUPI">UPI</label>
+        </div>
+        <div>
+            <input type="radio" id="paymentWallet" name="paymentMethod" value="wallet">
+            <label for="paymentWallet">Wallet</label>
+        </div>
+    
+        <% if (cartItems.length > 0 && address.length > 0) { %>
+            <button type="submit">Place Order</button>
+        <% } else { %>
+            <p>Please add products to your cart and provide a shipping address to proceed.</p>
+        <% } %>
+    </form>
+
+    <h3>Add a New Shipping Address:</h3>
+    <form action="/users/order/addaddress" method="POST">
+        <div>
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" required>
+        </div>
+        <div>
+            <label for="place">Place:</label>
+            <input type="text" id="place" name="place" required>
+        </div>
+        <div>
+            <label for="district">District:</label>
+            <input type="text" id="district" name="district" required>
+        </div>
+        <div>
+            <label for="pincode">Pincode:</label>
+            <input type="text" id="pincode" name="pincode" required>
+        </div>
+        <button type="submit">Add Address</button>
+    </form>
+
+</body>
+</html>

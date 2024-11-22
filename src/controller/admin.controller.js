@@ -1,4 +1,5 @@
 const User=require('../models/user.models.js')
+const Orders=require('../models/order.models.js')
 
 const listUser=async(req,res)=>{
     const users=await User.find()
@@ -18,4 +19,23 @@ const blockUnblockUser=async(req,res)=>{
     await user.save()
     res.redirect('/admin/list-user')
 }
-module.exports={listUser,blockUnblockUser};
+
+const showAllOrders=async(req,res)=>{
+    const {status}=req.query
+    const filter={}
+    if(status){
+        filter.status=status
+    }
+    const orders=await Orders.find(filter).populate('items.productid')
+    res.render("admin/order",{orders,selectedStatus:status || ""})
+}
+
+const updateOrderStatus=async(req,res)=>{
+    const {orderId,status}=req.body;
+    await Orders.findByIdAndUpdate(orderId,{
+        status
+    })
+    res.redirect("/admin/orders")
+}
+
+module.exports={listUser,blockUnblockUser,showAllOrders,updateOrderStatus};

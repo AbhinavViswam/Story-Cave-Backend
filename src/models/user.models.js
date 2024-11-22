@@ -3,6 +3,26 @@ const bcrypt=require('bcrypt')
 const jwt= require("jsonwebtoken")
 const { v4: uuidv4 } = require('uuid');
 
+const addressSchema=new mongoose.Schema({
+        city:{
+            type:String,
+            required:true
+        },
+        place:{
+            type:String,
+            required:true
+        },
+        district:{
+            type:String,
+            required:true
+        }, 
+        pincode:{
+            type:Number,
+            required:true
+        }
+})
+
+
 const UserSchema=new mongoose.Schema({
     _id:{
         type:String,
@@ -35,7 +55,8 @@ const UserSchema=new mongoose.Schema({
     },
     refreshToken:{
         type:String,
-    }
+    },
+    address:[addressSchema]
 },
 {
     timestamps:true

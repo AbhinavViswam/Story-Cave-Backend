@@ -6,7 +6,8 @@ const jwt=require("jsonwebtoken")
 const verifyUser=require("../middleware/userAuth.middleware.js")
 const router=express.Router()
 
-const {getCart,addToCart,removeFromCart,updateCart}=require("../controller/cart.controller.js")
+const {getCart,addToCart,removeFromCart,updateCart}=require("../controller/cart.controller.js");
+
 
 
 router.all('/register',(req,res)=>{
@@ -125,6 +126,37 @@ router.route("/wishlist/:productId")
 router.route("/wishlist/remove/:productId")
 .post((req,res)=>{
     removeFromWishlist(req,res);
+})
+
+
+
+//orders
+const {addAddress,getCheckoutOrder,checkOut,showMyOrders,cancelOrder}=require("../controller/order.controller.js")
+
+router.route("/order/addaddress")
+.post(verifyUser,(req,res)=>{
+    addAddress(req,res);
+})
+
+router.route("/order/checkout")
+.get(verifyUser,(req,res)=>{
+    getCheckoutOrder(req,res);
+})
+
+router.route("/order/checkout")
+.post(verifyUser,(req,res)=>{
+    checkOut(req,res);
+})
+
+router.route("/myorders")
+.get(verifyUser,(req,res)=>{
+    showMyOrders(req,res);
+})
+
+
+router.route("/myorders/remove")
+.post(verifyUser,(req,res)=>{
+    cancelOrder(req,res);
 })
 
 module.exports=router
