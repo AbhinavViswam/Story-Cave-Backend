@@ -84,20 +84,12 @@
         <!-- Payment Method Selection -->
         <h3>Select Payment Method:</h3>
         <div>
-            <input type="radio" id="paymentCard" name="paymentMethod" value="card" checked>
-            <label for="paymentCard">Credit/Debit Card</label>
-        </div>
-        <div>
             <input type="radio" id="paymentCOD" name="paymentMethod" value="cash-on-delivery">
             <label for="paymentCOD">Cash on Delivery</label>
         </div>
         <div>
-            <input type="radio" id="paymentUPI" name="paymentMethod" value="upi">
-            <label for="paymentUPI">UPI</label>
-        </div>
-        <div>
-            <input type="radio" id="paymentWallet" name="paymentMethod" value="wallet">
-            <label for="paymentWallet">Wallet</label>
+            <input type="radio" id="paymentWallet" name="paymentMethod" value="pay-now">
+            <label for="paymentWallet">Pay Now</label>
         </div>
     
         <% if (cartItems.length > 0 && address.length > 0) { %>
@@ -127,6 +119,27 @@
         </div>
         <button type="submit">Add Address</button>
     </form>
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=USD"></script>
+    <div id="paypal-button-container"></div>
 
+
+<script>
+    paypal.Buttons({
+        createOrder: async function (data, actions) {
+            const response = await fetch('/create-order', { method: 'POST' });
+            const order = await response.json();
+            return order.id;
+        },
+        onApprove: async function (data, actions) {
+            const capture = await fetch(`/capture-order/${data.orderID}`, { method: 'POST' });
+            if (capture.ok) {
+                alert('Payment successful!');
+                window.location.href = '/users/orderplacedsuccess'; // Redirect to success page
+            } else {
+                alert('Payment failed. Please try again.');
+            }
+        },
+    }).render('#paypal-button-container');
+</script>
 </body>
 </html>

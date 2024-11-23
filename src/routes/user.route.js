@@ -6,6 +6,7 @@ const jwt=require("jsonwebtoken")
 const verifyUser=require("../middleware/userAuth.middleware.js")
 const router=express.Router()
 
+
 const {getCart,addToCart,removeFromCart,updateCart}=require("../controller/cart.controller.js");
 
 
@@ -131,7 +132,7 @@ router.route("/wishlist/remove/:productId")
 
 
 //orders
-const {addAddress,getCheckoutOrder,checkOut,showMyOrders,cancelOrder}=require("../controller/order.controller.js")
+const {addAddress,getCheckoutOrder,checkOut,showMyOrders,cancelOrder,paypalOrder,viewOrderDetails}=require("../controller/order.controller.js")
 
 router.route("/order/addaddress")
 .post(verifyUser,(req,res)=>{
@@ -159,4 +160,50 @@ router.route("/myorders/remove")
     cancelOrder(req,res);
 })
 
+router.route("/myorders/:orderid")
+.post(verifyUser,(req,res)=>{
+    viewOrderDetails(req,res);
+})
+
+router.route("/orderplacedsuccess")
+.get(verifyUser,(req,res)=>{
+    paypalOrder(req,res)
+})
+
+router.route("/paymenterror")
+.get(verifyUser,(req,res)=>{
+    res.render("user/paymenterror")
+})
+
 module.exports=router
+
+// app.get('/success', async (req, res) => {
+//     const { paymentId, PayerID } = req.query;
+
+//     const executePaymentJson = {
+//         payer_id: PayerID,
+//     };
+
+//     paypal.payment.execute(paymentId, executePaymentJson, async (error, payment) => {
+//         if (error) {
+//             console.error(error.response);
+//             return res.status(500).send("Error processing PayPal payment.");
+//         } else {
+//             // Save order details in the database
+//             const { userId, orderItems, totalAmount, selectedAddress } = req.session.orderDetails;
+//             const newOrder = new Orders({
+//                 userid: userId,
+//                 items: orderItems,
+//                 totalAmount,
+//                 address: `${selectedAddress.city}, ${selectedAddress.place}, ${selectedAddress.district}, ${selectedAddress.pincode}`,
+//                 paymentMethod: 'paypal',
+//                 status: 'paid',
+//             });
+
+//             const placedOrder = await newOrder.save();
+//             await OrderConfirmMail(payment.payer.payer_info.email, placedOrder._id);
+
+//             res.render("user/orderplaced");
+//         }
+//     });
+// });
