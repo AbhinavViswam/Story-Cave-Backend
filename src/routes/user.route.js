@@ -132,7 +132,7 @@ router.route("/wishlist/remove/:productId")
 
 
 //orders
-const {addAddress,getCheckoutOrder,checkOut,showMyOrders,cancelOrder,paypalOrder,viewOrderDetails}=require("../controller/order.controller.js")
+const {addAddress,getCheckoutOrder,checkOut,showMyOrders,cancelOrder,paypalOrder,viewOrderDetails,removeAddress,addAddressPage}=require("../controller/order.controller.js")
 
 router.route("/order/addaddress")
 .post(verifyUser,(req,res)=>{
@@ -173,6 +173,16 @@ router.route("/orderplacedsuccess")
 router.route("/paymenterror")
 .get(verifyUser,(req,res)=>{
     res.render("user/paymenterror")
+})
+
+router.route("/order/removeaddress")
+.post(verifyUser,(req,res)=>{
+   removeAddress(req,res)
+})
+
+router.route("/order/addaddresspage/:userid")
+.get(verifyUser,(req,res)=>{
+   addAddressPage(req,res)
 })
 
 module.exports=router

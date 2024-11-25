@@ -31,7 +31,7 @@
                         <%  const firstItem = order.items[0]; const moreItemsCount = order.items.length - 1; %>
                     <h3 class="text-lg font-semibold mb-2">
                         <li>
-                            <strong><%= firstItem.productid.name %></strong> (Qty: <%= firstItem.quantity %>)
+                            <strong><%= firstItem.productid?firstItem.productid.name:"This Product was removed" %></strong> (Qty: <%= firstItem.quantity %>)
                             <%= moreItemsCount > 0 ? `+ ${moreItemsCount} more item(s)` : '' %>
                         </li>
                     </h3>

@@ -76,18 +76,31 @@
       <p class="text-gray-600 mt-4">
        <%= product.description  %>
       </p>
+      <p class="text-gray-600 mt-4">
+        <% if (product.stock < 50) { %>
+          In stock: <%= product.stock %>
+        <% } else { %>
+          In Stock
+        <% } %>
+      </p>
       <div class="mt-6">
         <form action="/users/cart/<%= product._id %>" method="post">
-       <label class="block text-gray-600" for="quantity">
-        Quantity
-       </label>
-       <input class="w-20 mt-2 p-2 border rounded-lg" id="quantity" min="1" name="inputQuantity" type="number" value="1"/>
-      </div>
-      <div class="mt-6 flex space-x-4">
-       <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-        Add to Cart
-       </button>
-    </form>
+          <label class="block text-gray-600" for="quantity">
+            Quantity
+          </label>
+          <input
+            class="w-20 mt-2 p-2 border rounded-lg"
+            id="quantity"
+            name="inputQuantity"
+            type="number"
+            min="1"
+            max="<%= product.stock %>"
+            value="1"
+          />
+          <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mt-4">
+            Add to Cart
+          </button>
+        </form>
       </div>
      </div>
     </div>
@@ -165,6 +178,6 @@
    </div>
   </main>
   <footer class="bg-white shadow mt-8">
-  </footer>
+  </footer>  
  </body>
 </html>

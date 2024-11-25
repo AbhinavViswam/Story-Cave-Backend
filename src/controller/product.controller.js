@@ -82,7 +82,7 @@ const updateProduct=async(req,res)=>{
                 author,
                 stock,
                 category,
-                image: image ? '/productImages/' + image.split('/').pop() : ''
+                image: image ? '/productImages/' + image.split('/').pop() : product.image
             },
             {new:true}
         )

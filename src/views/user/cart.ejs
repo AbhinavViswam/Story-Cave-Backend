@@ -10,7 +10,7 @@
             font-family: 'Montserrat', sans-serif;
             background-color: #f6f5f7;
             margin: 0;
-            padding: 0;
+            padding:50px 0px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -173,24 +173,32 @@
                 <tbody>
                     <% cart.items.forEach(item => { %>
                         <tr>
-                            <td><a href="/users/product/<%= item.productid._id %>/details"><img src="<%= item.productid.image %>" height="150px" width="100px"></a></td>
-                            <td><%= item.productid.name %></td>
+                            <td><a href="/users/product/<%= item.productid?._id %>/details"><img src="<%= item.productid?.image %>" height="150px" width="100px"></a></td>
+                            <td><%= item.productid?item.productid.name :"Product Unavailable" %></td>
                             <td>
-                                <form action="/users/cart/update/<%= item.productid._id %>" method="POST">
+                                <form action="/users/cart/update/<%= item.productid?._id %>" method="POST">
                                     <input 
                                         type="number" 
                                         name="quantities" 
                                         value="<%= item.quantity %>" 
-                                        min="1" 
+                                        min="1"
+                                        max="<%= item.productid?.stock %>" 
                                         class="quantity-input">
                                     <button type="submit">Update</button>
                                 </form>
                             </td>
                             
-                            <td>$<%= item.productid.offerprice %></td>
-                            <td>$<%= item.productid.offerprice * item.quantity %></td>
+                            <td>$<%= item.productid?.offerprice %></td>
+                            <td>$<%= item.productid?.offerprice * item.quantity %></td>
                             <td>
-                                <form action="/users/cart/remove/<%= item.productid._id  %>" method="post">
+                                <form action="/users/cart/remove/<%= item.productid?._id  %>" method="post">
+                                    <input 
+                                        type="hidden" 
+                                        name="quantityy" 
+                                        value="<%= item.quantity %>" 
+                                        min="1"
+                                        max="<%= item.productid?.stock %>" 
+                                        class="quantity-input">
                                     <button type="submit">Remove</button>
                                 </form>
                             </td>
