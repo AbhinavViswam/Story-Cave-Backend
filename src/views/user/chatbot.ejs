@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StoryCave Bot</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f6f5f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+        }
+
+        /* Go Back Button */
+        a {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: #0056b3;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin: 20px 0;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #003366;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        /* Messages Section */
+        .messages {
+            flex-grow: 1;
+            margin-bottom: 20px;
+            overflow-y: auto;
+            max-height: 350px;
+            padding-right: 10px;
+        }
+
+        .messages div {
+            margin: 10px 0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            word-wrap: break-word;
+        }
+
+        .messages .user {
+            background-color: #d1e7ff;
+            align-self: flex-start;
+        }
+
+        .messages .bot {
+            background-color: #f1f0f0;
+            align-self: flex-end;
+        }
+
+        /* User Input */
+        #userInput {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            width: calc(100% - 100px);
+            margin-bottom: 10px;
+        }
+
+        /* Send Button */
+        button {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px 16px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            align-self: flex-end;
+        }
+
+        button:hover {
+            background-color: #003366;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 100%;
+                padding: 15px;
+            }
+
+            #userInput {
+                font-size: 14px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<a href="/users/main">Go Back</a>
+
+<div class="chat-container">
+    <div class="messages" id="messages">
+        <!-- Chat messages will appear here -->
+    </div>
+    <input type="text" id="userInput" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+    const messagesDiv = document.getElementById('messages');
+    const userInput = document.getElementById('userInput');
+
+    function sendMessage() {
+        const message = userInput.value.trim();
+        if (message) {
+            // Display user's message
+            displayMessage('You', message, 'user');
+
+            // Send message to server
+            fetch('/users/chatbot/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display bot's reply
+                displayMessage('StoryCave', data.reply, 'bot');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+            // Clear input
+            userInput.value = '';
+        }
+    }
+
+    function displayMessage(sender, text, type) {
+        const messageDiv = document.createElement('div');
+        messageDiv.textContent = `${sender}: ${text}`;
+        messageDiv.classList.add(type);  // Add 'user' or 'bot' class
+        messagesDiv.appendChild(messageDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;  // Scroll to the bottom
+    }
+</script>
+
+</body>
+</html>

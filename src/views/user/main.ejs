@@ -95,6 +95,32 @@
         footer .social-icons a:hover {
             color: #d4a373;
         }
+
+        .chatbot-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: black;
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .chatbot-link:hover {
+            background-color: gray;
+        }
+
+        .chatbot-link i {
+            color: white;
+        }
     </style>
     <script>
         let currentBookIndex = 0;
@@ -394,6 +420,11 @@
             </div>
         </section>
     </main>
+    <div style="display: flex;">
+        <a href="/users/chatbot" class="chatbot-link">
+            <i class="fas fa-comment"></i> <!-- Font Awesome Chat Icon -->
+        </a>
+    </div>
     <footer>
         <p>
          &copy;2025 STORYCAVE. All rights reserved.

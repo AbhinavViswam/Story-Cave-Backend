@@ -7,11 +7,15 @@ const getWishlist=async(req,res)=>{
     if(!userToken){
         return res.json({error:"Token expired"})
     }
-    const decoded=jwt.verify(userToken,process.env.ACCESS_TOKEN_SECRET)
-    const userid=decoded._id;
-  
-    let wishlist = await Wishlist.findOne({ userid }).populate('productid');
-    res.render("user/wishlist",{wishlist})
+    try {
+        const decoded=jwt.verify(userToken,process.env.ACCESS_TOKEN_SECRET)
+        const userid=decoded._id;
+      
+        let wishlist = await Wishlist.findOne({ userid }).populate('productid');
+        res.render("user/wishlist",{wishlist})
+    } catch (error) {
+        res.send("Some Internal error Occured, cannot show orders")
+    }
 }
 
 const addToWishlist=async(req,res)=>{
@@ -20,19 +24,23 @@ const addToWishlist=async(req,res)=>{
     if(!userToken){
         return res.json({error:"Token expired"})
     }
-    const decoded=jwt.verify(userToken,process.env.ACCESS_TOKEN_SECRET)
-    const userid=decoded._id;
-  
-    let wishlist = await Wishlist.findOne({ userid });
-
-    if (!wishlist) {
-        wishlist = new Wishlist({ userid, productid: [] });
+    try {
+        const decoded=jwt.verify(userToken,process.env.ACCESS_TOKEN_SECRET)
+        const userid=decoded._id;
+      
+        let wishlist = await Wishlist.findOne({ userid });
+    
+        if (!wishlist) {
+            wishlist = new Wishlist({ userid, productid: [] });
+        }
+        if (!wishlist.productid.includes(productId)) {
+            wishlist.productid.push(productId);
+        }
+        await wishlist.save();
+        res.redirect('/users/main')
+    } catch (error) {
+        res.send("Some Internal error Occured, cannot show orders")
     }
-    if (!wishlist.productid.includes(productId)) {
-        wishlist.productid.push(productId);
-    }
-    await wishlist.save();
-    res.redirect('/users/main')
 }
 
 removeFromWishlist=async(req,res)=>{
@@ -41,6 +49,7 @@ removeFromWishlist=async(req,res)=>{
     if(!userToken){
         return res.json({error:"Token expired"})
     }
+    try{
     const decoded=jwt.verify(userToken,process.env.ACCESS_TOKEN_SECRET)
     const userid=decoded._id;
   
@@ -52,6 +61,9 @@ removeFromWishlist=async(req,res)=>{
        return res.redirect("/users/wishlist")
     }
     return res.json({e:"Error occured"})
+}catch(err){
+    res.send("Some Internal error Occured, cannot show orders")
+}
 }
 
 

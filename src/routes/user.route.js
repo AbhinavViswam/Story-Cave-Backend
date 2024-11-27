@@ -185,35 +185,17 @@ router.route("/order/addaddresspage/:userid")
    addAddressPage(req,res)
 })
 
+
+const { chatBotResponse } = require('../controller/chatbot.controller.js');
+
+router.get('/chatbot', (req, res) => {
+    res.render('user/chatbot');
+});
+
+router.post('/chatbot/chat', async (req, res) => {
+    const userMessage = req.body.message;
+    const botReply = await chatBotResponse(userMessage);
+    res.send({ reply: botReply });
+});
+
 module.exports=router
-
-// app.get('/success', async (req, res) => {
-//     const { paymentId, PayerID } = req.query;
-
-//     const executePaymentJson = {
-//         payer_id: PayerID,
-//     };
-
-//     paypal.payment.execute(paymentId, executePaymentJson, async (error, payment) => {
-//         if (error) {
-//             console.error(error.response);
-//             return res.status(500).send("Error processing PayPal payment.");
-//         } else {
-//             // Save order details in the database
-//             const { userId, orderItems, totalAmount, selectedAddress } = req.session.orderDetails;
-//             const newOrder = new Orders({
-//                 userid: userId,
-//                 items: orderItems,
-//                 totalAmount,
-//                 address: `${selectedAddress.city}, ${selectedAddress.place}, ${selectedAddress.district}, ${selectedAddress.pincode}`,
-//                 paymentMethod: 'paypal',
-//                 status: 'paid',
-//             });
-
-//             const placedOrder = await newOrder.save();
-//             await OrderConfirmMail(payment.payer.payer_info.email, placedOrder._id);
-
-//             res.render("user/orderplaced");
-//         }
-//     });
-// });

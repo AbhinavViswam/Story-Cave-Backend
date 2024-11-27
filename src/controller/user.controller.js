@@ -184,39 +184,47 @@ const logoutUser=async(req,res)=>{
 // products
 
 const listProducts=async(req,res)=>{
-        const userToken = req.cookies.accessTokenUser; 
-        if (!userToken) {
-            return res.status(401).json({ error: "Token expired" });
+        try {
+                const userToken = req.cookies.accessTokenUser; 
+                if (!userToken) {
+                    return res.status(401).json({ error: "Token expired" });
+                }
+                const decoded = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET);
+                const cart=await Cart.findOne({userid:decoded._id}).populate('items.productid')
+                const wishlist=await Wishlist.findOne({ userid:decoded._id })
+                let wlen;
+                let len;
+                if(!cart){
+                        len=0;
+                }
+                else{
+                        len=cart.items.length;
+                }
+                if(!wishlist){
+                        wlen=0;
+                }
+                else{
+                        wlen=wishlist.productid.length;
+                }
+                const products=await Products.find({isBlocked:false});
+                const categories=await Category.find();
+                if(!products){
+                        return res.render({error:"No products available"})
+                }
+                res.render("user/main",{wlen,len,decoded,products,categories,selectedCategory:"",languages:[]})
+        } catch (error) {
+                res.send("Some Internal error Occured, cannot show orders")
         }
-        const decoded = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET);
-        const cart=await Cart.findOne({userid:decoded._id}).populate('items.productid')
-        const wishlist=await Wishlist.findOne({ userid:decoded._id })
-        let wlen;
-        let len;
-        if(!cart){
-                len=0;
-        }
-        else{
-                len=cart.items.length;
-        }
-        if(!wishlist){
-                wlen=0;
-        }
-        else{
-                wlen=wishlist.productid.length;
-        }
-        const products=await Products.find({isBlocked:false});
-        const categories=await Category.find();
-        if(!products){
-                return res.render({error:"No products available"})
-        }
-        res.render("user/main",{wlen,len,decoded,products,categories,selectedCategory:"",languages:[]})
 }
 
 const productDetails=async(req,res)=>{
         const {productId}=req.params
-        const product=await Product.findById(productId).populate('category')
-        res.render("product/productdetail",{product});
+        try {
+                const product=await Product.findById(productId).populate('category')
+                res.render("product/productdetail",{product});
+        } catch (error) {
+                res.send("Some Internal error Occured, cannot show orders")
+        }
 }
 
 const productFilter=async(req,res)=>{
@@ -226,43 +234,47 @@ const productFilter=async(req,res)=>{
             return res.status(401).json({ error: "Token expired" });
         }
     
-        const decoded = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET);
-        const {category}=req.query;
-        const {language}=req.query;
-        const {price}=req.query;
-        const filter={isBlocked:false}
-        if(category){
-                filter.category=category;
+        try {
+                const decoded = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET);
+                const {category}=req.query;
+                const {language}=req.query;
+                const {price}=req.query;
+                const filter={isBlocked:false}
+                if(category){
+                        filter.category=category;
+                }
+                if (language) filter.language = language;
+        
+                let pdctQuery=Products.find(filter);
+                if(price=="asc"){
+                        pdctQuery=pdctQuery.sort({offerprice:1})
+                }
+                if(price=="des"){
+                        pdctQuery=pdctQuery.sort({offerprice:-1});
+                }
+                const cart=await Cart.findOne({userid:decoded._id}).populate('items.productid')
+                const wishlist=await Wishlist.findOne({ userid:decoded._id })
+                let wlen;
+                let len;
+                if(!cart){
+                        len=0;
+                }
+                else{
+                        len=cart.items.length;
+                }
+                if(!wishlist){
+                        wlen=0;
+                }
+                else{
+                        wlen=wishlist.productid.length;
+                }
+                const products=await pdctQuery.exec()
+                const categories=await Category.find();
+                const languages = [...new Set(products.map(product => product.language))];
+                res.render("user/main",{wlen,len,decoded,cart,categories,products,languages,selectedCategory:category || "",selectedLanguage:language || "",selectedPriceOrder:price || ""})
+        } catch (error) {
+                res.send("Some Internal error Occured, cannot show orders")    
         }
-        if (language) filter.language = language;
-
-        let pdctQuery=Products.find(filter);
-        if(price=="asc"){
-                pdctQuery=pdctQuery.sort({offerprice:1})
-        }
-        if(price=="des"){
-                pdctQuery=pdctQuery.sort({offerprice:-1});
-        }
-        const cart=await Cart.findOne({userid:decoded._id}).populate('items.productid')
-        const wishlist=await Wishlist.findOne({ userid:decoded._id })
-        let wlen;
-        let len;
-        if(!cart){
-                len=0;
-        }
-        else{
-                len=cart.items.length;
-        }
-        if(!wishlist){
-                wlen=0;
-        }
-        else{
-                wlen=wishlist.productid.length;
-        }
-        const products=await pdctQuery.exec()
-        const categories=await Category.find();
-        const languages = [...new Set(products.map(product => product.language))];
-        res.render("user/main",{wlen,len,decoded,cart,categories,products,languages,selectedCategory:category || "",selectedLanguage:language || "",selectedPriceOrder:price || ""})
 }
 
 module.exports={registerUser,loginUser,forgotPassword,verifyOtp,setNewPassword,logoutUser,listProducts,productDetails,productFilter}

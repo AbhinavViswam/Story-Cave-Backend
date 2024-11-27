@@ -167,8 +167,12 @@ const showMyOrders=async(req,res)=>{
 
 const viewOrderDetails=async(req,res)=>{
     const {orderid}=req.params
-    const order=await Orders.findById(orderid).populate('items.productid')
-    res.render("user/vieworder",{order})
+    try {
+        const order=await Orders.findById(orderid).populate('items.productid')
+        res.render("user/vieworder",{order})
+    } catch (error) {
+        res.send("Some Internal error Occured, cannot show orders")
+    }
 }
 
 const cancelOrder=async(req,res)=>{
@@ -176,42 +180,50 @@ const cancelOrder=async(req,res)=>{
     if(!orderid){
         return res.json({e:"orderid required"})
     }
-    const order=await Orders.findById(orderid)
-    order.status="cancelled"
-    await order.save();
-    res.redirect("/users/myorders")
+   try {
+     const order=await Orders.findById(orderid)
+     order.status="cancelled"
+     await order.save();
+     res.redirect("/users/myorders")
+   } catch (error) {
+    res.send("Some Internal error Occured, cannot show orders")
+   }
 
 }
 
 const paypalOrder=async(req,res)=>{
     const { paymentId, PayerID } = req.query;
 
-    const executePaymentJson = {
-        payer_id: PayerID,
-    };
-
-    paypal.payment.execute(paymentId, executePaymentJson, async (error, payment) => {
-        if (error) {
-            console.error(error.response);
-            return res.status(500).send("Error processing PayPal payment.");
-        } else {
-            const orderitemstoken=req.cookies.orderitemsToken
-            const orderitems=jwt.verify(orderitemstoken,process.env.ACCESS_TOKEN_SECRET)
-            const { userId, orderItems, totalAmount, selectedAddress } = orderitems;
-            const newOrder = new Orders({
-                userid: userId,
-                items: orderItems,
-                totalAmount,
-                address: `${selectedAddress.city}, ${selectedAddress.place}, ${selectedAddress.district}, ${selectedAddress.pincode}`,
-                paymentMethod: 'upi',
-                paymentStatus: 'completed'
-            });
-
-            const placedOrder = await newOrder.save();
-            await OrderConfirmMail(req.user.email, placedOrder._id);
-            return res.render("user/orderplaced");
-        }
-    });
+    try {
+        const executePaymentJson = {
+            payer_id: PayerID,
+        };
+    
+        paypal.payment.execute(paymentId, executePaymentJson, async (error, payment) => {
+            if (error) {
+                console.error(error.response);
+                return res.status(500).send("Error processing PayPal payment.");
+            } else {
+                const orderitemstoken=req.cookies.orderitemsToken
+                const orderitems=jwt.verify(orderitemstoken,process.env.ACCESS_TOKEN_SECRET)
+                const { userId, orderItems, totalAmount, selectedAddress } = orderitems;
+                const newOrder = new Orders({
+                    userid: userId,
+                    items: orderItems,
+                    totalAmount,
+                    address: `${selectedAddress.city}, ${selectedAddress.place}, ${selectedAddress.district}, ${selectedAddress.pincode}`,
+                    paymentMethod: 'upi',
+                    paymentStatus: 'completed'
+                });
+    
+                const placedOrder = await newOrder.save();
+                await OrderConfirmMail(req.user.email, placedOrder._id);
+                return res.render("user/orderplaced");
+            }
+        });
+    } catch (error) {
+        res.send("Some Internal error Occured, cannot show orders")
+    }
 }
 
 module.exports={addAddress, getCheckoutOrder, checkOut,showMyOrders,cancelOrder,paypalOrder,viewOrderDetails, removeAddress,addAddressPage}
