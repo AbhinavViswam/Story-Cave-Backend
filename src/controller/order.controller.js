@@ -105,7 +105,7 @@ const checkOut=async(req,res)=>{
              const createPaymentJson = {
                  intent: "sale",
                  payer: {
-                     payment_method: "paypal",
+                     payment_method: "paypal"
                  },
                  redirect_urls: {
                      return_url: "http://localhost:3000/users/orderplacedsuccess", // Update with your success route
@@ -137,8 +137,6 @@ const checkOut=async(req,res)=>{
                      },
                  ],
              };
-             
-     
              paypal.payment.create(createPaymentJson, (error, payment) => {
                  if (error) {
                      console.error(error);

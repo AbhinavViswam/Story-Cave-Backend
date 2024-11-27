@@ -40,7 +40,7 @@
                     <tbody>
                         <% orders.forEach(order => { %>
                         <tr>
-                            <td class="py-2 px-4 border-b border-gray-200 text-sm text-gray-700"><%= order._id %></td>
+                            <td class="py-2 px-4 border-b border-gray-200 text-sm text-gray-700" style="color: green; text-decoration: underline;"><a href="/admin/orders/details/<%= order._id %>"><%= order._id %></a></td>
                             <td class="py-2 px-4 border-b border-gray-200 text-sm text-gray-700"><%= new Date(order.createdAt).toLocaleDateString() %></td>
                             <td class="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
                                 <form action="/admin/orders/updatestatus" method="POST">

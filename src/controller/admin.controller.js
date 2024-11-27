@@ -55,4 +55,11 @@ const updateOrderStatus=async(req,res)=>{
     }
 }
 
-module.exports={listUser,blockUnblockUser,showAllOrders,updateOrderStatus};
+
+const ShowOrderDetails=async(req,res)=>{
+    const {orderid}=req.params
+    const order=await Orders.findById(orderid).populate('items.productid')
+    res.render("admin/orderDetails",{order})
+}
+
+module.exports={listUser,blockUnblockUser,showAllOrders,updateOrderStatus,ShowOrderDetails};
