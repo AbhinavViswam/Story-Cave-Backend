@@ -62,4 +62,45 @@ const ShowOrderDetails=async(req,res)=>{
     res.render("admin/orderDetails",{order})
 }
 
-module.exports={listUser,blockUnblockUser,showAllOrders,updateOrderStatus,ShowOrderDetails};
+
+const monthlyIncome=async(req,res)=>{
+    const order=await Orders.aggregate([
+        {
+            $match:{paymentStatus:'completed'}
+        },
+        {
+            $group:{
+                _id:{
+                    year:{
+                        "$year":"$createdAt"
+                    },
+                    month:{
+                        "$month":"$createdAt"
+                    }
+                },
+                totalIncome:{
+                    $sum:"$totalAmount"
+                }
+            }
+        },
+        {
+            $sort:{
+                "_id.year":1,
+                "_id.month":1
+            }
+        }
+    ])
+    const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+    
+    const Income = order.map(item => ({
+        year: item._id.year,
+        month: monthNames[item._id.month - 1],
+        totalIncome: item.totalIncome
+    }));
+    res.render("admin/dashboard",{Income,user:req.user})
+}
+
+module.exports={listUser,blockUnblockUser,showAllOrders,updateOrderStatus,ShowOrderDetails,monthlyIncome};

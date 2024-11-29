@@ -28,11 +28,29 @@ const ProductSchema = new mongoose.Schema({
         required:true,
         uppercase:true
     },
-    rating: {
+    ratings: [
+        {
+            userid: {
+                type: String,
+                ref: "User",
+                required: true,
+            },
+            rating: {
+                type: Number,
+                min: 1,
+                max: 5,
+                required: true,
+            },
+            comment: { type: String },
+        }
+    ],
+    averageRating: {
         type: Number,
-        min: 0,
-        max: 5,
-        default: 0
+        default: 0,
+    },
+    numOfRatings: {
+        type: Number,
+        default: 0,
     },
     category: {
         type: String,

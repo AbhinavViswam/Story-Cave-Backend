@@ -188,6 +188,7 @@ router.route("/order/addaddresspage/:userid")
 
 const { chatBotResponse } = require('../controller/chatbot.controller.js');
 
+
 router.get('/chatbot', (req, res) => {
     res.render('user/chatbot');
 });
@@ -197,5 +198,10 @@ router.post('/chatbot/chat', async (req, res) => {
     const botReply = await chatBotResponse(userMessage);
     res.send({ reply: botReply });
 });
+
+//rating
+const rate = require('../controller/rating.controller.js');
+
+router.route("/:orderId/:productId/rate").post(verifyUser,rate)
 
 module.exports=router

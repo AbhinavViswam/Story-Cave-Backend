@@ -829,46 +829,28 @@ MEDIA QUERY PHONE
        <!-- end insights -->
       <div class="recent_order">
          <h2>Recent Orders</h2>
-         <table> 
-             <thead>
-              <tr>
-                <th>Product Name</th>
-                <th>Product Number</th>
-                <th>Payments</th>
-                <th>Status</th>
-              </tr>
-             </thead>
+         <% if (Income.length > 0) { %>
+          <table style="max-height: 450px; overflow-x: auto;">
+              <thead>
+                  <tr>
+                      <th>Year</th>
+                      <th>Month</th>
+                      <th>Total Income</th>
+                  </tr>
+              </thead>
               <tbody>
-                 <tr>
-                   <td>Mini USB</td>
-                   <td>4563</td>
-                   <td>Due</td>
-                   <td class="warning">Pending</td>
-                   <td class="primary">Details</td>
-                 </tr>
-                 <tr>
-                  <td>Mini USB</td>
-                  <td>4563</td>
-                  <td>Due</td>
-                  <td class="warning">Pending</td>
-                  <td class="primary">Details</td>
-                </tr>
-                <tr>
-                  <td>Mini USB</td>
-                  <td>4563</td>
-                  <td>Due</td>
-                  <td class="warning">Pending</td>
-                  <td class="primary">Details</td>
-                </tr>
-                <tr>
-                  <td>Mini USB</td>
-                  <td>4563</td>
-                  <td>Due</td>
-                  <td class="warning">Pending</td>
-                  <td class="primary">Details</td>
-                </tr>
+                  <% Income.forEach(item => { %>
+                      <tr>
+                          <td><%= item.year %></td>
+                          <td><%= item.month %></td>
+                          <td>$<%= item.totalIncome.toFixed(2) %></td>
+                      </tr>
+                  <% }) %>
               </tbody>
-         </table>
+          </table>
+      <% } else { %>
+          <p>No income data available for the selected period.</p>
+      <% } %>
          <a href="#">Show All</a>
       </div>
 

@@ -110,72 +110,27 @@
      Customer Reviews
     </h2>
     <div class="mt-4">
+      <% if(product.ratings.length>0){ %>
+      <% product.ratings.forEach(review => { %>
      <div class="border-b pb-4 mb-4">
       <div class="flex items-center">
        <div class="text-yellow-500">
-        <i class="fas fa-star">
-        </i>
-        <i class="fas fa-star">
-        </i>
-        <i class="fas fa-star">
-        </i>
-        <i class="fas fa-star">
-        </i>
-        <i class="fas fa-star-half-alt">
+        <%= review.rating %> <i class="fas fa-star">
         </i>
        </div>
        <span class="text-gray-600 ml-2">
-        by John Doe
+        <%= review.userid.fullName %>
        </span>
       </div>
       <p class="text-gray-600 mt-2">
-       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
+        <%= review.comment%>
       </p>
      </div>
-     <div class="border-b pb-4 mb-4">
-      <div class="flex items-center">
-       <div class="text-yellow-500">
-        <i class="fas fa-star">
-        </i>
-        <i class="fas fa-star">
-        </i>
-        <i class="fas fa-star">
-        </i>
-        <i class="fas fa-star">
-        </i>
-       </div>
-       <span class="text-gray-600 ml-2">
-        by Jane Smith
-       </span>
-      </div>
-      <p class="text-gray-600 mt-2">
-       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
-      </p>
-     </div>
-     <div class="border-b pb-4 mb-4">
-      <div class="flex items-center">
-       <div class="text-yellow-500">
-        <i class="fas fa-star">
-        </i>
-        <i class="fas fa-star">
-        </i>
-        <i class="fas fa-star">
-        </i>
-        <i class="fas fa-star">
-        </i>
-        <i class="fas fa-star-half-alt">
-        </i>
-       </div>
-       <span class="text-gray-600 ml-2">
-        by Alice Johnson
-       </span>
-      </div>
-      <p class="text-gray-600 mt-2">
-       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
-      </p>
-     </div>
+     <% }) %>
+     <% }else{ %>
+      <h2 class="text-2xl font-bold text-gray-800">No Reviews...</h2>
+      <% } %>
     </div>
-   </div>
   </main>
   <footer class="bg-white shadow mt-8">
   </footer>  

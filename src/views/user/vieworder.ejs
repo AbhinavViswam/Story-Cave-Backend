@@ -61,10 +61,24 @@
                     <h5 class="text-lg font-semibold mb-2"><%= item.productid.name %></h5>
                     <p class="text-gray-600"><strong>Quantity:</strong> <%= item.quantity %></p>
                     <p class="text-gray-600"><strong>Price:</strong> $<%= item.price %></p>
+                    <% if((item.rated==false) && (order.status=='delivered')){%>
+                    <form action="/users/<%= order._id %>/<%= item.productid._id %>/rate" method="post">
+                        <select name="rating">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>⭐
+                        <textarea name="comment" placeholder="comments"></textarea>
+                       <button type="submit">Give Ratings</button>
+                    </form>
+                    <% }else if((item.rated)){%>
+                        <h3>Thanks For Rating</h3>
+                        <% } %>
                 </div>
                 <% }) %>
-            </div>
-
+            </div> 
             <!-- Remove Order Button -->
              <% if(order.status=="pending")  {%>
             <form action="/users/myorders/remove" method="post" class="mt-6">

@@ -20,7 +20,11 @@ const ordersSchema=new mongoose.Schema({
         price:{
             type:Number,
             required:true
-        }
+        },
+        rated: { 
+            type: Boolean, 
+            default: false
+         }
     }],
     totalAmount:{
         type:Number,

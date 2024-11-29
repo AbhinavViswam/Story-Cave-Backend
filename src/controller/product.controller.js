@@ -1,6 +1,7 @@
 
 const Product=require("../models/products.models.js")
 const Category=require("../models/category.models.js")
+const fs=require("fs")
 
 const addProduct=async (req,res)=>{
     const categories=await Category.find();
@@ -48,7 +49,7 @@ const getProductDetails = async (req, res) => {
     const { id } = req.params;
     const categories=await Category.find();
     try {
-        const product = await Product.findById(id).populate('category');
+        const product = await Product.findById(id).populate('category')
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }

@@ -2,7 +2,6 @@ const Cart=require("../models/cart.models.js")
 const Product=require("../models/products.models.js")
 const jwt=require("jsonwebtoken")
 
-
 const getCart=async(req,res)=>{
     try {
         const userToken=req.cookies.accessTokenUser
@@ -53,7 +52,6 @@ const addToCart=async(req,res)=>{
         res.send("Some Internal error Occured, Cannot Add To Cart")
     }
 }
-
 
 const removeFromCart=async(req,res)=>{
     try {
@@ -159,7 +157,5 @@ const updateCart = async (req, res) => {
         res.send("Some Internal error Occured, Cannot update Cart")
     }
 };
-
-
 
 module.exports={getCart,addToCart, removeFromCart,updateCart};

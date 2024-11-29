@@ -363,7 +363,7 @@
                </button>
                </form>
           <a href="/users/product/<%= product._id %>/details">
-          <img alt="Book cover of 'Simple Way Of Piece Life'" class="mx-auto mb-4" height="300" src="<%= product.image %>" width="200"/></a>
+          <img alt="No image" class="mx-auto mb-4" height="200" src="<%= product.image %>" width="200"/></a>
           <form action="/users/cart/<%= product._id %>" method="post">
             <input type="number" name="inputQuantity" min="1" value="1" style="display: none;">
           <button type="submit" class="add-to-cart">

@@ -220,7 +220,7 @@ const listProducts=async(req,res)=>{
 const productDetails=async(req,res)=>{
         const {productId}=req.params
         try {
-                const product=await Product.findById(productId).populate('category')
+                const product=await Product.findById(productId).populate('category').populate('ratings.userid')
                 res.render("product/productdetail",{product});
         } catch (error) {
                 res.send("Some Internal error Occured, cannot show orders")
