@@ -47,6 +47,7 @@
                                     <input type="hidden" name="orderId" value="<%= order._id %>">
                                     <select name="status" required>
                                         <option value="pending" <%= order.status === "pending" ? "selected" : "" %>>Pending</option>
+                                        <option value="approved" <%= order.status === "approved" ? "selected" : "" %>>Approved</option>
                                         <option value="shipped" <%= order.status === "shipped" ? "selected" : "" %>>Shipped</option>
                                         <option value="delivered" <%= order.status === "delivered" ? "selected" : "" %>>Delivered</option>
                                         <option value="cancelled" <%= order.status === "cancelled" ? "selected" : "" %>>Cancelled</option>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #007BFF;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e9f7fa;
+        }
+
+        p {
+            text-align: center;
+            font-weight: bold;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="/admin/dashboard">← Go Back</a>
+
+    <h2>Online Payments</h2>
+
+    <% if (onlinePayments.length > 0) { %>
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Total Amount</th>
+                <th>Payment Method</th>
+                <th>Status</th>
+                <th>Address</th>
+                <th>Created At</th>
+            </tr>
+            <% onlinePayments.forEach(order => { %>
+                <tr>
+                    <td><%= order._id %></td>
+                    <td>$<%= order.totalAmount %></td>
+                    <td><%= order.paymentMethod %></td>
+                    <td><%= order.status %></td>
+                    <td><%= order.address %></td>
+                    <td><%= order.createdAt.toLocaleDateString() %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>No Online Payments Found</p>
+    <% } %>
+
+    <h2>Cash on Delivery</h2>
+
+    <% if (cashOnDelivery.length > 0) { %>
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Total Amount</th>
+                <th>Payment Method</th>
+                <th>Status</th>
+                <th>Address</th>
+                <th>Created At</th>
+            </tr>
+            <% cashOnDelivery.forEach(order => { %>
+                <tr>
+                    <td><%= order._id %></td>
+                    <td>$<%= order.totalAmount %></td>
+                    <td><%= order.paymentMethod %></td>
+                    <td><%= order.status %></td>
+                    <td><%= order.address %></td>
+                    <td><%= order.createdAt.toLocaleDateString() %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>No Cash on Delivery Orders Found</p>
+    <% } %>
+
+</body>
+</html>

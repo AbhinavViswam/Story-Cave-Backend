@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Reviews</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            text-align: center;
+            color: #444;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .review-card {
+            background-color: #fff;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+
+        .review-card:hover {
+            transform: scale(1.02);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .user-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .product-name {
+            color: #666;
+        }
+
+        .rating {
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+        .comment {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="/admin/dashboard">← Go Back</a>
+
+    <div class="container">
+        <h1>Customer Reviews</h1>
+
+        <% if (review.length > 0) { %>
+            <% review.forEach(r => { %>
+                <div class="review-card">
+                    <div class="user-info">
+                        <img src="<%= r.image || '/default-avatar.png' %>" alt="<%= r.fullName %>" class="user-avatar">
+                        <div>
+                            <div class="user-name"><%= r.fullName %></div>
+                            <div class="product-name">Reviewed: <%= r.name %></div>
+                        </div>
+                    </div>
+
+                    <div class="rating">
+                        ⭐ <%= r.rating %>
+                    </div>
+
+                    <p class="comment"><%= r.comment %></p>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p>No reviews available.</p>
+        <% } %>
+
+    </div>
+
+</body>
+</html>

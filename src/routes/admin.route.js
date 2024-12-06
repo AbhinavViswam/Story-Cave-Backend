@@ -5,10 +5,10 @@ const upload = require("../middleware/multer.middleware.js")
 const { addProduct, updateProduct, viewProduct, getProductDetails, deleteProduct, deleteProductConfirmation, blockUnblockProduct} = require("../controller/product.controller.js");
 const { addCategory, viewCategory, updateCategory,deleteCategory} = require('../controller/category.controller.js');
 const Category = require('../models/category.models.js');
-const {listUser,blockUnblockUser,showAllOrders,updateOrderStatus,ShowOrderDetails,monthlyIncome} = require('../controller/admin.controller.js');
+const {listUser,blockUnblockUser,showAllOrders,updateOrderStatus,ShowOrderDetails,monthlyIncome,topProducts,categoryWiseSales,showReviews,onlineOfflinePayment,monthlyProfit,downloadSalesReport} = require('../controller/admin.controller.js');
  
-router.get('/dashboard', verifyAdmin, (req, res) => {
-    res.render('admin/dashboard', { user: req.user });
+router.get('/dashboard', verifyAdmin,monthlyIncome, monthlyProfit,(req, res) => {
+    res.render('admin/dashboard', { Income:req.income,user: req.user, profitData:req.profitdata});
 });
 
 router.route("/add-product")
@@ -102,14 +102,18 @@ router.route("/orders/details/:orderid")
     ShowOrderDetails(req,res);
 })
 
+router.route("/category-wise-sales").get(verifyAdmin,categoryWiseSales)
+
+router.route("/ratings").get(verifyAdmin,showReviews)
+
+router.route("/paymentMethod").get(verifyAdmin,onlineOfflinePayment)
+
+router.route("/top5").get(verifyAdmin,topProducts)
+
+router.route("/download-sales-report").get(verifyAdmin,downloadSalesReport)
 
 router.route("/logout").get((req,res)=>{
     res.redirect("/users/login")
 })
-
-
-//dashboard
-
-router.route("/monthlyincome").get(verifyAdmin,monthlyIncome)
 
 module.exports = router;

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        h2 {
+            text-align: center;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        .orders-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .order-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            text-align: center;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .order-card:hover {
+            transform: scale(1.05);
+        }
+
+        .order-info {
+            font-weight: bold;
+            color: #007BFF;
+        }
+
+        .order-income-amount {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .order-details {
+            margin-top: 15px;
+        }
+
+        .order-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .order-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .no-products-message {
+            text-align: center;
+            font-size: 24px;
+            color: #ff5733;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="/admin/dashboard">← Go Back</a>
+
+    <h2>Top Products</h2>
+
+    <% if (top5.length > 0) { %>
+        <div class="orders-container">
+            <% top5.forEach(item => { %>
+                <div class="order-card">
+                    <div class="order-info">
+                        <p>Total Income</p>
+                        <span class="order-income-amount">$<%= item.totalRevenue %></span>
+                    </div>
+                    <div class="order-details">
+                        <img src="<%= item.image %>" alt="<%= item.name %>" class="order-image">
+                        <h5 class="order-name"><%= item.name %></h5>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } else { %>
+        <h2 class="no-products-message">No Products Available</h2>
+    <% } %>
+
+</body>
+</html>
