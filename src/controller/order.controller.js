@@ -108,8 +108,8 @@ const checkOut=async(req,res)=>{
                      payment_method: "paypal"
                  },
                  redirect_urls: {
-                     return_url: "http://localhost:3000/users/orderplacedsuccess", // Update with your success route
-                     cancel_url: "http://localhost:3000/users/paymenterror",  // Update with your cancel route
+                     return_url: "https://story-cave.onrender.com/users/orderplacedsuccess", // Update with your success route
+                     cancel_url: "https://story-cave.onrender.com/users/paymenterror",  // Update with your cancel route
                  },
                  transactions: [
                      {
