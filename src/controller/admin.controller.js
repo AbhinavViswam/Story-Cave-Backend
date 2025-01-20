@@ -224,7 +224,6 @@ const showReviews=async(req,res)=>{
     res.render("admin/ratings",{review})
 }
 
-
 const onlineOfflinePayment = async (req, res) => {
     try {
         const results = await Orders.aggregate([
@@ -306,20 +305,16 @@ const PDFDocument = require('pdfkit');
 
 const downloadSalesReport=async(req,res)=>{
     try {
-       
         const orders = await Orders.find().select(
             '_id totalAmount paymentMethod status address createdAt'
         );
-
 
         const doc = new PDFDocument();
 
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename="sales_report.pdf"');
 
-       
         doc.pipe(res);
-
        
         doc.fontSize(20).text('Sales Report', { align: 'center' });
         doc.moveDown();
@@ -333,7 +328,6 @@ const downloadSalesReport=async(req,res)=>{
                 `${order._id} | $${order.totalAmount} | ${order.paymentMethod} | ${order.status} | ${order.address} | ${new Date(order.createdAt).toLocaleDateString()}`
             );
         });
-
       
         doc.end();
 
